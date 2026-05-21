@@ -29,18 +29,17 @@ export default function YOSSection() {
     const bg      = bgRef.current;
     if (!section || !tos || !title || !sub || !bg) return;
 
-    // Lock both title and TOS to exact viewport center independently
-    // TOS already has top:50% left:50% transform:-50%,-50%
-    // Title is in a flex-center container — both always centered
+    const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches
+      || window.innerWidth < 768;
 
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
         start: 'top top',
-        end: '+=320%',
+        end: isMobile ? '+=200%' : '+=320%',
         pin: true,
         pinSpacing: true,
-        scrub: 1.0,
+        scrub: isMobile ? 0.8 : 1.0,
         anticipatePin: 1,
         invalidateOnRefresh: true,
       },

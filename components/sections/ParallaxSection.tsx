@@ -17,11 +17,20 @@ function NetworkGlobe({ canvasRef }: { canvasRef: React.RefObject<HTMLCanvasElem
     let mouseX = 0, mouseY = 0;
     let targetMX = 0, targetMY = 0;
 
+    const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches
+      || window.innerWidth < 768;
+
     const onMouseMove = (e: MouseEvent) => {
       targetMX = (e.clientX / window.innerWidth  - 0.5) * 2;
       targetMY = (e.clientY / window.innerHeight - 0.5) * 2;
     };
+    const onTouchMove = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      targetMX = (touch.clientX / window.innerWidth  - 0.5) * 2;
+      targetMY = (touch.clientY / window.innerHeight - 0.5) * 2;
+    };
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
 
     interface Node {
       theta: number; phi: number;
@@ -29,7 +38,7 @@ function NetworkGlobe({ canvasRef }: { canvasRef: React.RefObject<HTMLCanvasElem
       dPhi: number; phase: number;
     }
 
-    const NODE_COUNT = 160;
+    const NODE_COUNT = isMobile ? 80 : 160;
     const nodes: Node[] = Array.from({ length: NODE_COUNT }, () => ({
       theta: Math.random() * Math.PI * 2,
       phi:   Math.acos(2 * Math.random() - 1),
@@ -43,12 +52,11 @@ function NetworkGlobe({ canvasRef }: { canvasRef: React.RefObject<HTMLCanvasElem
       const H  = canvas!.height;
       const cx = W / 2;
       const cy = H / 2;
-      const R  = Math.min(W, H) * 0.44; // larger globe
+      const R  = Math.min(W, H) * 0.44;
 
       ctx!.clearRect(0, 0, W, H);
       t += 0.003;
 
-      // Lerp mouse
       mouseX += (targetMX - mouseX) * 0.04;
       mouseY += (targetMY - mouseY) * 0.04;
 
@@ -74,7 +82,6 @@ function NetworkGlobe({ canvasRef }: { canvasRef: React.RefObject<HTMLCanvasElem
 
       const sorted = [...nodes].sort((a, b) => a.z - b.z);
 
-      // Connections — white/silver monochrome
       sorted.forEach((a, i) => {
         sorted.slice(i + 1).forEach(b => {
           const dist = Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
@@ -91,7 +98,6 @@ function NetworkGlobe({ canvasRef }: { canvasRef: React.RefObject<HTMLCanvasElem
         });
       });
 
-      // Nodes — white dots with soft halo
       sorted.forEach(n => {
         const p = project(n);
         const pulse = Math.sin(t * 2 + n.phase) * 0.4 + 0.6;
@@ -99,7 +105,6 @@ function NetworkGlobe({ canvasRef }: { canvasRef: React.RefObject<HTMLCanvasElem
         const alpha = depth * 0.85;
         const r = 1.4 + pulse * 1.1;
 
-        // Halo
         const grad = ctx!.createRadialGradient(p.px, p.py, 0, p.px, p.py, r * 5);
         grad.addColorStop(0, `rgba(255,255,255,${alpha * 0.3})`);
         grad.addColorStop(1, 'rgba(255,255,255,0)');
@@ -108,14 +113,12 @@ function NetworkGlobe({ canvasRef }: { canvasRef: React.RefObject<HTMLCanvasElem
         ctx!.fillStyle = grad;
         ctx!.fill();
 
-        // Core
         ctx!.beginPath();
         ctx!.arc(p.px, p.py, r, 0, Math.PI * 2);
         ctx!.fillStyle = `rgba(255,255,255,${alpha})`;
         ctx!.fill();
       });
 
-      // Subtle equator ellipse
       ctx!.beginPath();
       ctx!.ellipse(cx, cy, R, R * 0.1, 0, 0, Math.PI * 2);
       ctx!.strokeStyle = 'rgba(255,255,255,0.04)';
@@ -138,6 +141,7 @@ function NetworkGlobe({ canvasRef }: { canvasRef: React.RefObject<HTMLCanvasElem
       cancelAnimationFrame(raf);
       ro.disconnect();
       window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('touchmove', onTouchMove);
     };
   }, [canvasRef]);
 
@@ -160,11 +164,20 @@ function BackgroundParticles({ containerRef }: { containerRef: React.RefObject<H
     let mx = 0.5, my = 0.5;
     let tmx = 0.5, tmy = 0.5;
 
+    const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches
+      || window.innerWidth < 768;
+
     const onMove = (e: MouseEvent) => {
       tmx = e.clientX / window.innerWidth;
       tmy = e.clientY / window.innerHeight;
     };
+    const onTouch = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      tmx = touch.clientX / window.innerWidth;
+      tmy = touch.clientY / window.innerHeight;
+    };
     window.addEventListener('mousemove', onMove, { passive: true });
+    window.addEventListener('touchmove', onTouch, { passive: true });
 
     interface Particle {
       x: number; y: number; r: number;
@@ -172,7 +185,7 @@ function BackgroundParticles({ containerRef }: { containerRef: React.RefObject<H
       parallaxDepth: number; phase: number;
     }
 
-    const PCOUNT = 60;
+    const PCOUNT = isMobile ? 30 : 60;
     const particles: Particle[] = Array.from({ length: PCOUNT }, () => ({
       baseX: Math.random(),
       baseY: Math.random(),
@@ -205,7 +218,6 @@ function BackgroundParticles({ containerRef }: { containerRef: React.RefObject<H
         ctx.fill();
       });
 
-      // Subtle flowing lines
       for (let i = 0; i < 6; i++) {
         const y = H * (0.15 + i * 0.13);
         const offsetY = (my - 0.5) * (0.01 + i * 0.005) * H;
@@ -236,6 +248,7 @@ function BackgroundParticles({ containerRef }: { containerRef: React.RefObject<H
       cancelAnimationFrame(raf);
       ro.disconnect();
       window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('touchmove', onTouch);
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };
   }, [containerRef]);
@@ -245,59 +258,38 @@ function BackgroundParticles({ containerRef }: { containerRef: React.RefObject<H
 
 /* ─── Section ─────────────────────────────────────────────────────────────── */
 export default function ParallaxSection() {
-  const sectionRef      = useRef<HTMLDivElement>(null);
-  const videoWrapRef    = useRef<HTMLDivElement>(null);
-  const videoRef        = useRef<HTMLVideoElement>(null);
-  const globeSectionRef = useRef<HTMLDivElement>(null);
-  const globeCanvasRef  = useRef<HTMLCanvasElement>(null);
-  const headingRef      = useRef<HTMLHeadingElement>(null);
-  const taglineRef      = useRef<HTMLParagraphElement>(null);
+  const sectionRef       = useRef<HTMLDivElement>(null);
+  const videoWrapRef     = useRef<HTMLDivElement>(null);
+  const videoRef         = useRef<HTMLVideoElement>(null);
+  const globeSectionRef  = useRef<HTMLDivElement>(null);
+  const globeCanvasRef   = useRef<HTMLCanvasElement>(null);
+  const headingRef       = useRef<HTMLHeadingElement>(null);
+  const taglineRef       = useRef<HTMLParagraphElement>(null);
   const globeParticleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const section     = sectionRef.current;
-    const videoWrap   = videoWrapRef.current;
+    const section      = sectionRef.current;
+    const videoWrap    = videoWrapRef.current;
     const globeSection = globeSectionRef.current;
     if (!section || !videoWrap || !globeSection) return;
 
+    const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches
+      || window.innerWidth < 768;
+
     if (videoRef.current) videoRef.current.play().catch(() => {});
 
-    // ── Video: slower-than-scroll parallax (semi-fixed feel) ──
-    gsap.to(videoWrap, {
-      y: () => window.innerHeight * 0.45,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: '80% top',
-        scrub: true,
-      },
-    });
-
-    // ── Globe section: SLIDE UP from below (cinematic reveal) ──
-    gsap.fromTo(globeSection,
-      { clipPath: 'inset(100% 0% 0% 0%)' },
-      {
-        clipPath: 'inset(0% 0% 0% 0%)',
-        ease: 'power3.inOut',
-        scrollTrigger: {
-          trigger: section,
-          start: '50% top',
-          end: '80% top',
-          scrub: 1.2,
-        },
-      }
-    );
-
-    // Heading 3D reveal
+    // ── Heading reveal fires as section enters viewport (before pin locks) ──
     if (headingRef.current) {
       const split = new SplitType(headingRef.current, { types: 'chars' });
       gsap.fromTo(split.chars,
-        { y: 80, opacity: 0, rotateX: -70, filter: 'blur(8px)', transformOrigin: '50% 100%' },
+        isMobile
+          ? { y: 50, opacity: 0 }
+          : { y: 80, opacity: 0, rotateX: -70, filter: 'blur(8px)', transformOrigin: '50% 100%' },
         {
-          y: 0, opacity: 1, rotateX: 0, filter: 'blur(0px)',
-          duration: 1.4, stagger: 0.04, ease: 'power4.out',
-          scrollTrigger: { trigger: headingRef.current, start: 'top 75%' },
+          y: 0, opacity: 1,
+          ...(isMobile ? {} : { rotateX: 0, filter: 'blur(0px)' }),
+          duration: isMobile ? 1.0 : 1.4, stagger: 0.04, ease: 'power4.out',
+          scrollTrigger: { trigger: section, start: 'top 85%', once: true },
         }
       );
     }
@@ -307,17 +299,47 @@ export default function ParallaxSection() {
         { opacity: 0, y: 28 },
         {
           opacity: 1, y: 0, duration: 1, ease: 'power2.out',
-          scrollTrigger: { trigger: taglineRef.current, start: 'top 80%' },
+          scrollTrigger: { trigger: section, start: 'top 70%', once: true },
         }
       );
     }
 
+    // ── Main pinned timeline ──
+    const tl = gsap.timeline();
+
+    if (videoRef.current) {
+      tl.to(videoRef.current, { scale: 1.06, ease: 'power1.inOut', duration: 1 }, 0);
+    }
+
+    tl.fromTo(globeSection,
+      { clipPath: 'inset(100% 0% 0% 0%)' },
+      { clipPath: 'inset(0% 0% 0% 0%)', ease: 'power3.inOut', duration: 1 },
+      0.3
+    );
+
+    // ── Pin: shorter on mobile — less scroll to advance the full animation ──
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top top',
+      end: isMobile ? '+=1400' : '+=2000',
+      pin: true,
+      scrub: isMobile ? 0.8 : 1.2,
+      pinSpacing: true,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+      animation: tl,
+    });
+
+    // Force layout recalculation so next section positions correctly
     ScrollTrigger.refresh();
 
     return () => {
       ScrollTrigger.getAll()
-        .filter(s => s.vars.trigger instanceof Element
-          && (s.vars.trigger as Element).closest?.('#titan-parallax'))
+        .filter(s => {
+          const trigger = s.vars.trigger;
+          if (!(trigger instanceof Element)) return false;
+          return trigger === section || section.contains(trigger);
+        })
         .forEach(s => s.kill());
     };
   }, []);
@@ -327,13 +349,13 @@ export default function ParallaxSection() {
       ref={sectionRef}
       id="titan-parallax"
       className="relative bg-cinema-black"
-      style={{ minHeight: '200vh' }}
+      style={{ height: '100vh', overflow: 'hidden' }}
     >
-      {/* ── Semi-fixed video panel (Titan Series) ── */}
+      {/* ── Full-screen video panel (Titan Series) ── */}
       <div
         ref={videoWrapRef}
-        className="absolute top-0 left-0 right-0 h-screen overflow-hidden"
-        style={{ willChange: 'transform' }}
+        className="absolute inset-0 overflow-hidden"
+        style={{ willChange: 'transform', zIndex: 1 }}
       >
         <video
           ref={videoRef}
@@ -386,23 +408,23 @@ export default function ParallaxSection() {
           </div>
         </div>
 
-        {/* Letterbox */}
+        {/* Letterbox bars */}
         <div className="absolute top-0 inset-x-0 h-10 bg-cinema-black pointer-events-none" />
         <div className="absolute bottom-0 inset-x-0 h-10 bg-cinema-black pointer-events-none" />
       </div>
 
-      {/* ── Globe section — slides up over the video ── */}
+      {/* ── Globe panel — slides up over the video during pin ── */}
       <div
         ref={globeSectionRef}
-        className="absolute bottom-0 left-0 right-0 bg-cinema-black overflow-hidden"
-        style={{ height: '100vh', clipPath: 'inset(100% 0% 0% 0%)' }}
+        className="absolute inset-0 bg-cinema-black overflow-hidden"
+        style={{ clipPath: 'inset(100% 0% 0% 0%)', zIndex: 2 }}
       >
         {/* Mouse-reactive background particles */}
         <div ref={globeParticleRef} className="absolute inset-0">
           <BackgroundParticles containerRef={globeParticleRef} />
         </div>
 
-        {/* Globe canvas — white/silver monochrome */}
+        {/* Globe canvas */}
         <canvas
           ref={globeCanvasRef}
           className="absolute inset-0 w-full h-full"
@@ -445,11 +467,10 @@ export default function ParallaxSection() {
           </div>
         </div>
 
-        {/* Top gradient */}
+        {/* Edge gradients */}
         <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-cinema-black to-transparent pointer-events-none" />
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-cinema-black to-transparent pointer-events-none" />
       </div>
-
     </section>
   );
 }

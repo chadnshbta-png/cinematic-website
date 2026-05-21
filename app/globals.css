@@ -13,6 +13,11 @@
   --color-gold: #C8963E;
   --color-silver: #8A9BA8;
   --color-white: #F5F0EB;
+
+  /* Hero cinematic sentence — desktop defaults */
+  --hero-science-bottom: 36%;
+  --hero-panel-height: 52vh;
+  --hero-dom-bottom: 13%;
 }
 
 * {
@@ -196,6 +201,20 @@ video {
   display: flex;
   flex-wrap: nowrap;
   height: 100%;
+}
+
+/* Mobile: hero sentence positions + performance */
+@media (max-width: 767px) {
+  :root {
+    --hero-science-bottom: 40%;
+    --hero-panel-height: 40vh;
+    --hero-dom-bottom: 10%;
+  }
+
+  /* Strip blur from non-critical elements to save GPU on mobile */
+  .blur-3xl {
+    filter: none !important;
+  }
 }
 
 /* Responsive typography */

@@ -30,17 +30,16 @@ export default function SpecsSection() {
     const section = sectionRef.current;
     if (!section) return;
 
-    // Heading — chars rise from below, color illuminates gray→black
     const heading = section.querySelector('.specs-heading');
     if (heading) {
       const split = new SplitType(heading as HTMLElement, { types: 'chars' });
       gsap.fromTo(
         split.chars,
-        { y: 80, opacity: 0, color: 'rgba(0,0,0,0.2)' },
+        { y: 80, opacity: 0, color: 'rgba(255,255,255,0.1)' },
         {
           y: 0,
           opacity: 1,
-          color: 'rgba(0,0,0,0.85)',
+          color: 'rgba(255,255,255,0.85)',
           duration: 1.2,
           stagger: 0.025,
           ease: 'power4.out',
@@ -52,7 +51,6 @@ export default function SpecsSection() {
       );
     }
 
-    // Spec bars — animated on scroll
     barsRef.current.forEach((bar, i) => {
       if (!bar) return;
       const fill = bar.querySelector('.bar-fill') as HTMLElement;
@@ -75,7 +73,6 @@ export default function SpecsSection() {
       );
     });
 
-    // Number counter animation
     numbersRef.current.forEach((el, i) => {
       if (!el) return;
       const target = specs[i].value;
@@ -102,7 +99,6 @@ export default function SpecsSection() {
       );
     });
 
-    // Feature cards
     const cards = section.querySelectorAll('[data-feature]');
     gsap.fromTo(
       cards,
@@ -125,35 +121,34 @@ export default function SpecsSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-40 overflow-hidden"
+      className="relative py-40 overflow-hidden bg-cinema-black"
       id="performance"
-      style={{ background: '#ebebeb' }}
     >
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute right-0 top-0 w-1/2 h-full opacity-[0.04]">
           <svg width="100%" height="100%" viewBox="0 0 600 800" fill="none">
-            <circle cx="400" cy="400" r="300" stroke="black" strokeWidth="0.5" />
-            <circle cx="400" cy="400" r="200" stroke="black" strokeWidth="0.5" />
-            <circle cx="400" cy="400" r="100" stroke="black" strokeWidth="0.5" />
-            <line x1="100" y1="400" x2="700" y2="400" stroke="black" strokeWidth="0.5" />
-            <line x1="400" y1="100" x2="400" y2="700" stroke="black" strokeWidth="0.5" />
+            <circle cx="400" cy="400" r="300" stroke="rgba(255,255,255,0.6)" strokeWidth="0.5" />
+            <circle cx="400" cy="400" r="200" stroke="rgba(255,255,255,0.6)" strokeWidth="0.5" />
+            <circle cx="400" cy="400" r="100" stroke="rgba(255,255,255,0.6)" strokeWidth="0.5" />
+            <line x1="100" y1="400" x2="700" y2="400" stroke="rgba(255,255,255,0.6)" strokeWidth="0.5" />
+            <line x1="400" y1="100" x2="400" y2="700" stroke="rgba(255,255,255,0.6)" strokeWidth="0.5" />
           </svg>
         </div>
-        <div className="absolute left-0 bottom-0 w-96 h-96 rounded-full blur-3xl" style={{ background: 'rgba(0,0,0,0.03)' }} />
+        <div className="absolute left-0 bottom-0 w-96 h-96 rounded-full blur-3xl" style={{ background: 'rgba(255,255,255,0.03)' }} />
       </div>
 
       <div className="relative max-w-screen-xl mx-auto px-8 md:px-20">
         {/* Section header */}
         <div className="flex items-center gap-4 mb-8">
-          <div className="w-8 h-px bg-black/25" />
-          <span className="text-black/35 text-[10px] font-mono tracking-ultra uppercase">
+          <div className="w-8 h-px bg-white/25" />
+          <span className="text-white/35 text-[10px] font-mono tracking-ultra uppercase">
             Technical
           </span>
         </div>
         <h2
           className="specs-heading font-mono uppercase leading-none mb-20"
-          style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', letterSpacing: '-0.03em', color: 'rgba(0,0,0,0.85)' }}
+          style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', letterSpacing: '-0.03em', color: 'rgba(255,255,255,0.85)' }}
         >
           By the
           <br />
@@ -165,32 +160,31 @@ export default function SpecsSection() {
           {specs.map((spec, i) => (
             <div key={spec.label} ref={(el) => { barsRef.current[i] = el; }} className="group">
               <div className="flex items-end justify-between mb-3">
-                <span className="text-[10px] font-mono tracking-widest uppercase" style={{ color: 'rgba(0,0,0,0.4)' }}>
+                <span className="text-[10px] font-mono tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.4)' }}>
                   {spec.label}
                 </span>
                 <div className="flex items-baseline gap-1">
                   <span
                     ref={(el) => { numbersRef.current[i] = el; }}
                     className="font-mono text-2xl"
-                    style={{ color: 'rgba(0,0,0,0.85)' }}
+                    style={{ color: 'rgba(255,255,255,0.85)' }}
                   >
                     0
                   </span>
-                  <span className="text-[11px] font-mono" style={{ color: 'rgba(0,0,0,0.3)' }}>{spec.unit}</span>
+                  <span className="text-[11px] font-mono" style={{ color: 'rgba(255,255,255,0.3)' }}>{spec.unit}</span>
                 </div>
               </div>
 
               {/* Bar track */}
-              <div className="h-px relative overflow-hidden" style={{ background: 'rgba(0,0,0,0.1)' }}>
+              <div className="h-px relative overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
                 <div
                   className="bar-fill absolute top-0 left-0 h-full"
-                  style={{ width: '0%', background: 'rgba(0,0,0,0.6)' }}
+                  style={{ width: '0%', background: 'rgba(255,255,255,0.65)' }}
                 />
               </div>
 
-              {/* Small accent */}
               <div className="flex justify-end mt-1.5">
-                <span className="text-[9px] font-mono" style={{ color: 'rgba(0,0,0,0.2)' }}>
+                <span className="text-[9px] font-mono" style={{ color: 'rgba(255,255,255,0.2)' }}>
                   {spec.percentage}%
                 </span>
               </div>
@@ -205,35 +199,34 @@ export default function SpecsSection() {
               key={feature.title}
               data-feature
               className="group relative p-8 cursor-default transition-all duration-500"
-              style={{ border: '1px solid rgba(0,0,0,0.08)', background: 'rgba(255,255,255,0.5)' }}
+              style={{ border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.03)' }}
             >
               <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.03) 0%, transparent 70%)' }}
+                style={{ background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, transparent 70%)' }}
               />
-              <div className="text-2xl mb-6" style={{ color: 'rgba(0,0,0,0.5)' }}>{feature.icon}</div>
-              <h4 className="font-mono text-sm uppercase tracking-wide mb-3" style={{ color: 'rgba(0,0,0,0.75)' }}>
+              <div className="text-2xl mb-6" style={{ color: 'rgba(255,255,255,0.5)' }}>{feature.icon}</div>
+              <h4 className="font-mono text-sm uppercase tracking-wide mb-3" style={{ color: 'rgba(255,255,255,0.75)' }}>
                 {feature.title}
               </h4>
-              <p className="font-mono text-[11px] leading-relaxed" style={{ color: 'rgba(0,0,0,0.4)' }}>
+              <p className="font-mono text-[11px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
                 {feature.desc}
               </p>
 
-              {/* Corner accent */}
-              <div className="absolute bottom-4 right-4 w-4 h-4 border-b border-r transition-colors duration-500" style={{ borderColor: 'rgba(0,0,0,0.15)' }} />
+              <div className="absolute bottom-4 right-4 w-4 h-4 border-b border-r transition-colors duration-500" style={{ borderColor: 'rgba(255,255,255,0.15)' }} />
             </div>
           ))}
         </div>
 
         {/* Grand total statement */}
-        <div className="mt-32 pt-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-8" style={{ borderTop: '1px solid rgba(0,0,0,0.08)' }}>
+        <div className="mt-32 pt-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-8" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <div>
-            <p className="text-[10px] font-mono tracking-ultra uppercase mb-2" style={{ color: 'rgba(0,0,0,0.35)' }}>
+            <p className="text-[10px] font-mono tracking-ultra uppercase mb-2" style={{ color: 'rgba(255,255,255,0.35)' }}>
               Starting From
             </p>
             <div
               className="font-mono"
-              style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', color: 'rgba(0,0,0,0.85)' }}
+              style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', color: 'rgba(255,255,255,0.85)' }}
             >
               $280,000
             </div>
@@ -241,15 +234,15 @@ export default function SpecsSection() {
           <div className="flex flex-col gap-3">
             <a
               href="#contact"
-              className="inline-flex items-center gap-4 text-white text-[11px] font-mono tracking-widest uppercase px-10 py-5 transition-colors duration-300"
-              style={{ background: '#0f0f0f' }}
+              className="inline-flex items-center gap-4 text-[11px] font-mono tracking-widest uppercase px-10 py-5 transition-all duration-300 hover:bg-white/10"
+              style={{ border: '1px solid rgba(255,255,255,0.25)', color: 'rgba(255,255,255,0.9)' }}
             >
               Configure Yours
               <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
                 <path d="M0 5h14M10 1l4 4-4 4" stroke="currentColor" strokeWidth="1.5" />
               </svg>
             </a>
-            <p className="text-[10px] font-mono text-center" style={{ color: 'rgba(0,0,0,0.3)' }}>
+            <p className="text-[10px] font-mono text-center" style={{ color: 'rgba(255,255,255,0.3)' }}>
               Available Q2 2025
             </p>
           </div>

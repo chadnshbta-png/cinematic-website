@@ -15,16 +15,21 @@ export function useLenis(): { lenis: Lenis | null } {
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
+    const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches
+      || window.innerWidth < 768;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const lenis = new Lenis({
-      duration: 1.4,
+      duration: isMobile ? 1.0 : 1.4,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1,
-      touchMultiplier: 2,
+      touchMultiplier: isMobile ? 1.5 : 2,
+      syncTouch: isMobile,
       infinite: false,
-    });
+    } as ConstructorParameters<typeof Lenis>[0]);
 
     lenisInstance = lenis;
     lenisRef.current = lenis;

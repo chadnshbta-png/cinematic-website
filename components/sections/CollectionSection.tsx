@@ -97,7 +97,7 @@ export default function CollectionSection() {
       {/* ── Section heading (normal flow, scrolls before pin) ─────────── */}
       <div
         ref={headingRef}
-        className="relative z-10 px-8 md:px-20 pt-32 pb-20 bg-cinema-black"
+        className="relative z-10 px-8 md:px-20 pt-20 md:pt-32 pb-12 md:pb-20 bg-cinema-black"
       >
         <div className="flex items-center gap-4 mb-6">
           <div className="w-8 h-px bg-white/25" />
@@ -118,7 +118,8 @@ export default function CollectionSection() {
         </p>
 
         <div className="absolute right-8 md:right-20 bottom-6 flex items-center gap-3 text-cinema-silver/30">
-          <span className="text-[10px] font-mono tracking-widest uppercase">Drag to explore</span>
+          <span className="hidden md:inline text-[10px] font-mono tracking-widest uppercase">Drag to explore</span>
+          <span className="md:hidden text-[10px] font-mono tracking-widest uppercase">Swipe to explore</span>
           <svg width="40" height="8" viewBox="0 0 40 8" fill="none">
             <path d="M0 4h38M34 1l4 3-4 3" stroke="currentColor" strokeWidth="1" />
           </svg>
