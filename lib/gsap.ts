@@ -15,7 +15,7 @@ if (typeof window !== 'undefined') {
 
   gsap.config({
     nullTargetWarn: false,
-    trialWarn: false,
+    
   });
 
   gsap.defaults({
