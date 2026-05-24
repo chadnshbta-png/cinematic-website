@@ -10,12 +10,12 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'TITAN — Built for Legends',
-  description: 'The Titan Series redefines what a truck can be. 1,200 horsepower. Zero compromise. Pure cinematic engineering.',
-  keywords: ['luxury truck', 'performance', 'Titan', 'automotive', 'engineering'],
+  title: 'DSV — Built for the Future',
+  description: 'DSV redefines what global logistics can be. 1,200 active routes. Zero compromise. Pure cinematic engineering.',
+  keywords: ['global logistics', 'freight', 'DSV', 'supply chain', 'network intelligence'],
   openGraph: {
-    title: 'TITAN — Built for Legends',
-    description: 'The pinnacle of automotive engineering. The Titan Series.',
+    title: 'DSV — Built for the Future',
+    description: 'The pinnacle of logistics engineering. DSV Global Network.',
     type: 'website',
   },
 };

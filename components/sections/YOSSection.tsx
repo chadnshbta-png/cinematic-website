@@ -7,7 +7,7 @@ export default function YOSSection() {
   const sectionRef   = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef     = useRef<HTMLDivElement>(null);
-  const tosRef       = useRef<HTMLDivElement>(null);
+  const dsvRef       = useRef<HTMLDivElement>(null);
   const subRef       = useRef<HTMLDivElement>(null);
   const bgRef        = useRef<HTMLDivElement>(null);
 
@@ -23,11 +23,11 @@ export default function YOSSection() {
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
-    const tos     = tosRef.current;
+    const dsv     = dsvRef.current;
     const title   = titleRef.current;
     const sub     = subRef.current;
     const bg      = bgRef.current;
-    if (!section || !tos || !title || !sub || !bg) return;
+    if (!section || !dsv || !title || !sub || !bg) return;
 
     const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches
       || window.innerWidth < 768;
@@ -96,8 +96,8 @@ export default function YOSSection() {
       ease: 'power2.in',
     }, 0.71);
 
-    // 0.78 → 1.0 — TOS emerges: scale from 1.8 → 1, letter-spacing collapses
-    tl.fromTo(tos,
+    // 0.78 → 1.0 — DSV emerges: scale from 1.8 → 1, letter-spacing collapses
+    tl.fromTo(dsv,
       {
         opacity: 0,
         scale: 1.75,
@@ -142,11 +142,11 @@ export default function YOSSection() {
         <div className="absolute inset-0 opacity-[0.025]">
           <svg width="100%" height="100%">
             <defs>
-              <pattern id="tos-grid2" width="60" height="60" patternUnits="userSpaceOnUse">
+              <pattern id="dsv-grid" width="60" height="60" patternUnits="userSpaceOnUse">
                 <path d="M60 0L0 0 0 60" fill="none" stroke="white" strokeWidth="0.4"/>
               </pattern>
             </defs>
-            <rect width="100%" height="100%" fill="url(#tos-grid2)"/>
+            <rect width="100%" height="100%" fill="url(#dsv-grid)"/>
           </svg>
         </div>
 
@@ -186,12 +186,12 @@ export default function YOSSection() {
         <div className="flex items-center gap-3 mb-14 opacity-40">
           <div className="w-5 h-px bg-white/40" />
           <span className="text-white/60 text-[10px] font-mono tracking-ultra uppercase">
-            Powertrain Intelligence
+            Network Intelligence
           </span>
           <div className="w-5 h-px bg-white/40" />
         </div>
 
-        {/* ── Full phrase TITAN · OPERATING · SYSTEM ── */}
+        {/* ── Full phrase DIGITAL · SUPPLY · VISION ── */}
         <div
           ref={titleRef}
           className="font-mono uppercase text-white leading-none flex items-center gap-6 md:gap-10 flex-wrap justify-center opacity-0"
@@ -201,25 +201,25 @@ export default function YOSSection() {
           }}
         >
           <span ref={w0Ref} className="inline-block relative overflow-hidden whitespace-nowrap">
-            T<span ref={r0Ref} className="inline-block">ITAN</span>
+            D<span ref={r0Ref} className="inline-block">IGITAL</span>
           </span>
 
           <span ref={dot0Ref} className="text-white/25 text-2xl">·</span>
 
           <span ref={w1Ref} className="inline-block relative overflow-hidden whitespace-nowrap">
-            O<span ref={r1Ref} className="inline-block">PERATING</span>
+            S<span ref={r1Ref} className="inline-block">UPPLY</span>
           </span>
 
           <span ref={dot1Ref} className="text-white/25 text-2xl">·</span>
 
           <span ref={w2Ref} className="inline-block relative overflow-hidden whitespace-nowrap">
-            S<span ref={r2Ref} className="inline-block">YSTEM</span>
+            V<span ref={r2Ref} className="inline-block">ISION</span>
           </span>
         </div>
 
-        {/* ── TOS — PERFECTLY centered via top/left/translate ── */}
+        {/* ── DSV — emerges as the brand mark ── */}
         <div
-          ref={tosRef}
+          ref={dsvRef}
           className="font-mono uppercase text-white leading-none opacity-0"
           style={{
             position: 'absolute',
@@ -231,7 +231,7 @@ export default function YOSSection() {
             textShadow: '0 0 80px rgba(255,255,255,0.12), 0 0 200px rgba(255,255,255,0.05)',
           }}
         >
-          TOS
+          DSV
         </div>
 
         {/* ── Subline — anchored at bottom of pinned area ── */}
@@ -247,12 +247,12 @@ export default function YOSSection() {
           }}
         >
           <p className="text-white/40 text-sm font-mono tracking-widest uppercase mb-2">
-            Titan Operating System
+            DSV Operating System
           </p>
           <p className="text-white/20 text-[10px] font-mono max-w-xs mx-auto leading-relaxed">
             1,200 decisions per second.
             <br />
-            The intelligence behind every revolution.
+            The intelligence behind every network.
           </p>
         </div>
       </div>

@@ -1,6 +1,7 @@
 'use client';
 
-import { useRef } from 'react';
+
+
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface LoaderProps {
@@ -78,7 +79,7 @@ export default function Loader({ progress, isComplete, onAnimationComplete }: Lo
             transition={{ duration: 1.2, delay: 0.4 }}
             className="text-cinema-white text-xs font-mono tracking-ultra uppercase mb-2"
           >
-            Titan Series
+            DSV
           </motion.div>
           <motion.div
             initial={{ opacity: 0 }}

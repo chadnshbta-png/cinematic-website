@@ -219,7 +219,7 @@ export default function CinematicBridgeSection() {
           <div ref={eyebrowRef} className="flex items-center gap-4 mb-8 opacity-0">
             <div className="w-6 h-px bg-white/30" />
             <span className="text-white/40 text-[10px] font-mono tracking-ultra uppercase">
-              Titan X — 2025
+              DSV X — 2025
             </span>
           </div>
 
@@ -264,7 +264,7 @@ export default function CinematicBridgeSection() {
             className="font-mono text-base leading-loose max-w-xl opacity-0"
             style={{ color: 'rgba(255,255,255,0.1)' }}
           >
-            1,200 horsepower. Adaptive intelligence. Titanium chassis.
+            1,200 horsepower. Adaptive intelligence. Carbon-composite chassis.
             <br />
             The machine that redefines every standard it encounters.
           </p>

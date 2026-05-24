@@ -347,11 +347,11 @@ export default function ParallaxSection() {
   return (
     <section
       ref={sectionRef}
-      id="titan-parallax"
+      id="dsv-parallax"
       className="relative bg-cinema-black"
       style={{ height: '100vh', overflow: 'hidden' }}
     >
-      {/* ── Full-screen video panel (Titan Series) ── */}
+      {/* ── Full-screen video panel (DSV Network) ── */}
       <div
         ref={videoWrapRef}
         className="absolute inset-0 overflow-hidden"
@@ -383,7 +383,7 @@ export default function ParallaxSection() {
             <div className="flex items-center gap-3 justify-center mb-5">
               <div className="w-5 h-px bg-white/25" />
               <span className="text-white/35 text-[10px] font-mono tracking-ultra uppercase">
-                Titan Series
+                DSV Network
               </span>
               <div className="w-5 h-px bg-white/25" />
             </div>
@@ -437,7 +437,7 @@ export default function ParallaxSection() {
           <div className="mb-5 flex items-center gap-3">
             <div className="w-5 h-px bg-white/20" />
             <span className="text-white/30 text-[10px] font-mono tracking-ultra uppercase">
-              TOS — Live Network
+              DSV OS — Live Network
             </span>
             <div className="w-5 h-px bg-white/20" />
           </div>

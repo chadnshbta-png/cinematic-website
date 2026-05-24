@@ -8,30 +8,30 @@ import SplitType from 'split-type';
 
 const storyBeats = [
   {
-    year: '1968',
+    year: '1976',
     headline: 'The Origin',
-    body: 'From the desert proving grounds of Nevada, a legend was born. The first Titan prototype shattered every benchmark — and the expectations of an entire industry.',
+    body: 'From a single freight corridor in Northern Europe, a global network began to take shape. The first DSV route connected what others could not reach — and redefined the standard for logistics.',
     accent: '#ffffff',
     position: 'left',
   },
   {
-    year: '1987',
-    headline: 'The Revolution',
-    body: 'Two decades of relentless engineering led to the Titan Series II — the first truck to break the 700 horsepower barrier in production trim.',
+    year: '1997',
+    headline: 'The Network',
+    body: 'Two decades of relentless expansion established DSV across 17 countries — the backbone of European freight. The first integrated logistics intelligence platform went live.',
     accent: '#d0d0d0',
     position: 'right',
   },
   {
-    year: '2004',
-    headline: 'The Mastery',
-    body: 'When technology catches up with ambition, true mastery begins. The Titan V introduced our adaptive suspension system, a technology now standard across the industry.',
+    year: '2008',
+    headline: 'The Intelligence',
+    body: 'When technology meets ambition, mastery begins. DSV Operating System launched — processing real-time telemetry across every freight line. The network learned to think.',
     accent: '#a0a8b0',
     position: 'left',
   },
   {
     year: '2025',
-    headline: 'The Legend',
-    body: 'The culmination of 57 years of obsession. 1,200 horsepower. Autonomous capability. Pure hybrid power. The Titan X doesn\'t just raise the bar — it eliminates it.',
+    headline: 'The Vision',
+    body: 'The culmination of 49 years of obsession. 1,200 active global routes. Autonomous coordination. Zero margin for error. DSV X doesn\'t just move cargo — it predicts where the world is going.',
     accent: '#8A9BA8',
     position: 'right',
   },
@@ -215,7 +215,7 @@ export default function StorySection() {
           Our Story
         </h2>
         <p className="text-white/40 font-mono text-sm mt-6 max-w-md">
-          Half a century of engineering obsession, distilled into one iconic machine.
+          Five decades of logistics obsession, distilled into one global network.
         </p>
       </div>
 
@@ -363,10 +363,10 @@ export default function StorySection() {
           className="font-mono uppercase leading-none select-none"
           style={{ fontSize: 'clamp(4rem, 12vw, 12rem)', letterSpacing: '-0.04em', color: 'rgba(255,255,255,0.05)' }}
         >
-          TITAN
+          DSV
         </div>
         <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-mono text-sm tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.35)' }}>
-          Since 1968
+          Since 1976
         </p>
       </div>
     </section>

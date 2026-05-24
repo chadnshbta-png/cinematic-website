@@ -49,7 +49,7 @@ export default function Navigation() {
               </svg>
             </div>
             <span className="text-cinema-white text-sm font-mono tracking-cinema uppercase">
-              TITAN
+              DSV
             </span>
           </motion.div>
 

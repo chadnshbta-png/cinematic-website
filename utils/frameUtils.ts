@@ -1,11 +1,8 @@
-export const FRAME_COUNT = 240;
+export const FRAME_COUNT = 480;
 export const FRAME_BASE_PATH = '/frame';
-export const FRAME_PREFIX = 'First-';
-export const FRAME_EXTENSION = '.webp';
 
 export function getFramePath(index: number): string {
-  const padded = String(index).padStart(4, '0');
-  return `${FRAME_BASE_PATH}/${FRAME_PREFIX}${padded}${FRAME_EXTENSION}`;
+  return `${FRAME_BASE_PATH}/frame (${index}).webp`;
 }
 
 export function generateFramePaths(): string[] {

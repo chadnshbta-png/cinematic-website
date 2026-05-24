@@ -261,7 +261,7 @@ export default function VideoSection() {
         {/* Centered overlay text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8">
           <div className="text-cinema-orange text-[10px] font-mono tracking-ultra uppercase mb-4">
-            Titan Series
+            DSV Network
           </div>
           <h3
             className="text-cinema-white font-mono uppercase"

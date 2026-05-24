@@ -14,10 +14,10 @@ interface TruckModel {
 }
 
 const models: TruckModel[] = [
-  { id: 'titan-x',   name: 'Titan X',   tagline: 'The Apex Predator',      hp: '1,200', torque: '1,850 Nm', accent: '#ffffff' },
-  { id: 'titan-pro', name: 'Titan Pro', tagline: 'Uncompromising Power',    hp: '850',   torque: '1,450 Nm', accent: '#c8c8c8' },
-  { id: 'titan-s',   name: 'Titan S',   tagline: 'Born on the Track',       hp: '650',   torque: '1,200 Nm', accent: '#8A9BA8' },
-  { id: 'titan-e',   name: 'Titan E',   tagline: 'The Future of Power',     hp: '720',   torque: '1,600 Nm', accent: '#a0a8b0' },
+  { id: 'dsv-x',       name: 'DSV X',       tagline: 'Global Network Apex',          hp: '1,200', torque: '1,850 Nm', accent: '#ffffff' },
+  { id: 'dsv-pro',     name: 'DSV Pro',     tagline: 'Precision Delivered',          hp: '850',   torque: '1,450 Nm', accent: '#c8c8c8' },
+  { id: 'dsv-sprint',  name: 'DSV Sprint',  tagline: 'Maximum Range',                hp: '650',   torque: '1,200 Nm', accent: '#8A9BA8' },
+  { id: 'dsv-electric',name: 'DSV Electric',tagline: 'Zero Emission Intelligence',   hp: '720',   torque: '1,600 Nm', accent: '#a0a8b0' },
 ];
 
 const CARD_WIDTH_VW = 88;

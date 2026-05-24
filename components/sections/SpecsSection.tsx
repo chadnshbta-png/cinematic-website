@@ -17,7 +17,7 @@ const specs = [
 const features = [
   { icon: '◈', title: 'Adaptive AI Suspension', desc: 'Real-time terrain reading with predictive damping' },
   { icon: '◇', title: 'Dual Hybrid Powerplant', desc: 'V12 ICE + dual electric motors for seamless torque delivery' },
-  { icon: '○', title: 'Titanium Monocoque', desc: 'Aerospace-derived chassis 40% lighter than steel' },
+  { icon: '○', title: 'Composite Monocoque', desc: 'Aerospace-derived chassis 40% lighter than steel' },
   { icon: '◉', title: 'Cinematic HUD', desc: '120Hz AR heads-up display with full driver assist suite' },
 ];
 

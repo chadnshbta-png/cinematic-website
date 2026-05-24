@@ -8,22 +8,22 @@ const paragraphs = [
   {
     number: '01',
     title: 'The Command',
-    body: 'At the heart of the Titan X sits a 6.8-litre twin-turbo V12 paired with a dual electric drive system. 1,200 horsepower available on demand. The instant you need it. Without hesitation.',
+    body: 'At the core of DSV X sits a next-generation dual-powertrain system delivering 1,200 horsepower across every terrain. Instant torque response. Zero hesitation. Total command of the road.',
   },
   {
     number: '02',
-    title: 'The Chassis',
-    body: 'A titanium-carbon monocoque frame — borrowed from aerospace engineering — gives the Titan X a structural rigidity that no conventional truck chassis can match. 40% lighter. 3× stronger.',
+    title: 'The Architecture',
+    body: 'A carbon-composite monocoque frame — borrowed from aerospace engineering — gives DSV X a structural integrity that no conventional logistics vehicle can match. 40% lighter. 3× stronger.',
   },
   {
     number: '03',
     title: 'The Intelligence',
-    body: 'Titan Operating System processes 1,200 data points per second. Terrain mapping, predictive suspension, torque vectoring, real-time stability control. The Titan thinks before you react.',
+    body: 'DSV Operating System processes 1,200 data points per second. Route optimization, predictive load management, real-time terrain analysis, autonomous stability. DSV thinks before you react.',
   },
   {
     number: '04',
     title: 'The Presence',
-    body: 'Designed by the same studio responsible for three consecutive "Car of the Year" awards. Every surface is purposeful. Every proportion deliberate. The Titan X is not designed — it is sculpted.',
+    body: 'Engineered for the world\'s most demanding logistics corridors. Every surface is purposeful. Every system deliberate. DSV X is not built — it is architected for the future of freight.',
   },
 ];
 
@@ -108,7 +108,7 @@ export default function ScrollStorySection() {
     titleEl: Element | null,
     bodyEl: Element | null,
     lineEl: Element | null,
-    index: number,
+    _index: number,
   ) {
     gsap.to(para, { opacity: 1, duration: 0.5, ease: 'power2.out' });
 
@@ -203,7 +203,7 @@ export default function ScrollStorySection() {
             {/* Video label */}
             <div className="absolute bottom-10 left-8">
               <p className="text-cinema-silver/30 text-[9px] font-mono tracking-ultra uppercase">
-                Live — Titan X Prototype
+                Live — DSV X Prototype
               </p>
             </div>
           </div>

@@ -12,27 +12,23 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ onLoadProgress, onLoadComplete }: HeroSectionProps) {
-  const sectionRef       = useRef<HTMLDivElement>(null);
-  const canvasRef        = useRef<HTMLCanvasElement>(null);
-  const vignetteRef      = useRef<HTMLDivElement>(null);
-  const textWrapRef      = useRef<HTMLDivElement>(null);
-  const eyebrowRef       = useRef<HTMLDivElement>(null);
-  const line1Ref         = useRef<HTMLDivElement>(null);
-  const line2Ref         = useRef<HTMLDivElement>(null);
-  const ctaRef           = useRef<HTMLDivElement>(null);
-  const scrollHintRef    = useRef<HTMLDivElement>(null);
-  const hasAnimatedRef   = useRef(false);
+  const sectionRef     = useRef<HTMLDivElement>(null);
+  const canvasRef      = useRef<HTMLCanvasElement>(null);
+  const vignetteRef    = useRef<HTMLDivElement>(null);
+  const textWrapRef    = useRef<HTMLDivElement>(null);
+  const eyebrowRef     = useRef<HTMLDivElement>(null);
+  const line1Ref       = useRef<HTMLDivElement>(null);
+  const line2Ref       = useRef<HTMLDivElement>(null);
+  const ctaRef         = useRef<HTMLDivElement>(null);
+  const scrollHintRef  = useRef<HTMLDivElement>(null);
+  const hasAnimatedRef = useRef(false);
 
-  // "The Science of" — first half of cross-section sentence
-  const scienceRef       = useRef<HTMLDivElement>(null);
-  const scienceLine1Ref  = useRef<HTMLDivElement>(null);
-
-  // "Dominance" — second half, completes inside the hero pin
-  const dominanceRevealRef = useRef<HTMLDivElement>(null);
-  const dominanceTextRef   = useRef<HTMLDivElement>(null);
-
-  // Cinematic bridge-emergence panel (rises from hero bottom)
-  const bridgePanelRef = useRef<HTMLDivElement>(null);
+  // Cinematic title — emerges inside hero from frames 365→480
+  const cinematicTitleRef = useRef<HTMLDivElement>(null);
+  const titleAccentRef    = useRef<HTMLDivElement>(null);
+  const titleEyebrowRef   = useRef<HTMLDivElement>(null);
+  const titleLine1Ref     = useRef<HTMLDivElement>(null);
+  const titleLine2Ref     = useRef<HTMLDivElement>(null);
 
   const { setProgress, state } = useFrameSequence(canvasRef);
 
@@ -93,7 +89,7 @@ export default function HeroSection({ onLoadProgress, onLoadComplete }: HeroSect
         0.6
       );
 
-      // Orange light-sweep only on desktop (GPU-intensive)
+      // Orange light-sweep — desktop only (GPU-intensive)
       if (!isMobile) {
         const sweep = document.createElement('div');
         sweep.className = 'absolute inset-0 pointer-events-none';
@@ -122,7 +118,7 @@ export default function HeroSection({ onLoadProgress, onLoadComplete }: HeroSect
     }
   }, [state.isReady]);
 
-  // ─── Scroll-driven: frame sequence + cinematic sentence transition ───────────
+  // ─── Scroll-driven: frame sequence + cinematic title reveal ──────────────
   useGSAP(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -130,19 +126,107 @@ export default function HeroSection({ onLoadProgress, onLoadComplete }: HeroSect
     const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches
       || window.innerWidth < 768;
 
-    // Mobile scrolls 3× vh, desktop 5× vh — keeps pin duration proportional to screen
     const SCROLL_MULTIPLIER = isMobile ? 3 : 5;
     const heroScrollDist    = window.innerHeight * SCROLL_MULTIPLIER;
 
-    // Timing thresholds — mobile fires earlier so the reveal isn't cramped
-    const scienceStart = isMobile ? 0.70 : 0.80;
-    const scienceEnd   = isMobile ? 0.87 : 0.95;
-    const panelStart   = isMobile ? 0.72 : 0.82;
-    const domStart     = isMobile ? 0.80 : 0.88;
-    const domEnd       = isMobile ? 0.97 : 0.99;
+    // Frame 365 out of 480 — where the cinematic title begins to emerge
+    const TEXT_START = 365 / 480;
 
-    const scrubBase  = isMobile ? 0.8 : 1.2;
-    const panelScrub = isMobile ? 0.8 : 1.4;
+    // ── Build the cinematic title reveal timeline (paused, scrubbed by scroll) ──
+    let cinematicTl: gsap.core.Timeline | null = null;
+
+    if (cinematicTitleRef.current && titleLine1Ref.current && titleLine2Ref.current) {
+      const split1 = new SplitType(titleLine1Ref.current, { types: 'chars' });
+      const split2 = new SplitType(titleLine2Ref.current, { types: 'chars' });
+
+      if (!isMobile) {
+        gsap.set(titleLine2Ref.current, { perspective: 900, transformStyle: 'preserve-3d' });
+      }
+
+      cinematicTl = gsap.timeline({ paused: true });
+
+      // Container becomes visible
+      cinematicTl.to(cinematicTitleRef.current, { opacity: 1, duration: 0.04 }, 0);
+
+      // Accent line wipes in from center
+      if (titleAccentRef.current) {
+        cinematicTl.fromTo(
+          titleAccentRef.current,
+          { scaleX: 0, opacity: 0 },
+          { scaleX: 1, opacity: 1, duration: 0.18, ease: 'power2.out', transformOrigin: 'center' },
+          0.02
+        );
+      }
+
+      // Eyebrow label slides up into place
+      if (titleEyebrowRef.current) {
+        cinematicTl.fromTo(
+          titleEyebrowRef.current,
+          { opacity: 0, y: 8, filter: 'blur(4px)' },
+          { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.22, ease: 'power2.out' },
+          0.08
+        );
+      }
+
+      // Line 1 — tracking compresses inward as text settles
+      cinematicTl.fromTo(
+        titleLine1Ref.current,
+        { letterSpacing: '0.42em' },
+        { letterSpacing: '0.22em', duration: 0.55, ease: 'power2.out' },
+        0.12
+      );
+
+      // Line 1 chars — blur-to-focus, clip-path wipe left→right, staggered
+      cinematicTl.fromTo(
+        split1.chars,
+        {
+          opacity: 0,
+          filter: 'blur(8px)',
+          y: isMobile ? 8 : 12,
+          clipPath: 'inset(0% 100% 0% 0%)',
+        },
+        {
+          opacity: 1,
+          filter: 'blur(0px)',
+          y: 0,
+          clipPath: 'inset(0% 0% 0% 0%)',
+          stagger: { each: 0.038, ease: 'power1.inOut' },
+          duration: 0.35,
+          ease: 'power3.out',
+        },
+        0.12
+      );
+
+      // Line 2 — tracking compresses harder (bigger type, more dramatic)
+      cinematicTl.fromTo(
+        titleLine2Ref.current,
+        { letterSpacing: '0.34em' },
+        { letterSpacing: '0.14em', duration: 0.65, ease: 'power2.out' },
+        0.40
+      );
+
+      // Line 2 chars — deeper blur, subtle 3D rotateX on desktop
+      cinematicTl.fromTo(
+        split2.chars,
+        isMobile
+          ? { opacity: 0, filter: 'blur(10px)', y: 16, clipPath: 'inset(0% 100% 0% 0%)' }
+          : { opacity: 0, filter: 'blur(18px)', y: 22, clipPath: 'inset(0% 100% 0% 0%)', rotateX: -18, transformOrigin: '50% 100%' },
+        isMobile
+          ? {
+              opacity: 1, filter: 'blur(0px)', y: 0, clipPath: 'inset(0% 0% 0% 0%)',
+              stagger: { each: 0.05, ease: 'power1.inOut' },
+              duration: 0.42,
+              ease: 'power3.out',
+            }
+          : {
+              opacity: 1, filter: 'blur(0px)', y: 0, clipPath: 'inset(0% 0% 0% 0%)', rotateX: 0,
+              stagger: { each: 0.055, ease: 'power1.inOut' },
+              duration: 0.50,
+              ease: 'power4.out',
+            },
+        0.40
+      );
+    }
 
     // ── Main pin + frame scrub ──
     const st = ScrollTrigger.create({
@@ -158,86 +242,25 @@ export default function HeroSection({ onLoadProgress, onLoadComplete }: HeroSect
         setProgress(self.progress);
         const p = self.progress;
 
+        // Entrance text fades out and lifts as scroll begins
         if (textWrapRef.current) {
           const textOpacity = p < 0.08 ? 1 : Math.max(0, 1 - (p - 0.08) * 12);
           const textY       = p > 0.08 ? -(p - 0.08) * 80 : 0;
           gsap.set(textWrapRef.current, { opacity: textOpacity, y: textY });
         }
 
+        // Vignette deepens with scroll
         if (vignetteRef.current) {
           gsap.set(vignetteRef.current, { opacity: Math.min(0.85, p * 2) });
         }
+
+        // Cinematic title — scrub progress mapped from frame 365→480
+        if (cinematicTl) {
+          const textProg = Math.max(0, Math.min(1, (p - TEXT_START) / (1 - TEXT_START)));
+          cinematicTl.progress(textProg);
+        }
       },
     });
-
-    // ── "The Science of" — cinematic clip-path typing ──
-    if (scienceRef.current && scienceLine1Ref.current) {
-      const split1   = new SplitType(scienceLine1Ref.current, { types: 'chars' });
-      const typingTl = gsap.timeline({ paused: true });
-
-      typingTl.to(scienceRef.current, { opacity: 1, duration: 0.08 }, 0);
-      typingTl.fromTo(
-        split1.chars,
-        isMobile
-          ? { clipPath: 'inset(0% 105% 0% 0%)', opacity: 0, y: 10 }
-          : { clipPath: 'inset(0% 105% 0% 0%)', opacity: 0, y: 16, rotateX: -25, filter: 'blur(8px)', transformOrigin: '50% 100%' },
-        isMobile
-          ? { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, y: 0, stagger: { each: 0.045, ease: 'power1.inOut' }, duration: 0.35, ease: 'power3.out' }
-          : { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, y: 0, rotateX: 0, filter: 'blur(0px)', stagger: { each: 0.055, ease: 'power1.inOut' }, duration: 0.4, ease: 'power3.out' },
-        0.08
-      );
-
-      ScrollTrigger.create({
-        trigger: section,
-        start: `top+=${heroScrollDist * scienceStart} top`,
-        end:   `top+=${heroScrollDist * scienceEnd}   top`,
-        scrub: scrubBase,
-        animation: typingTl,
-      });
-    }
-
-    // ── Bridge panel rises from bottom ──
-    if (bridgePanelRef.current) {
-      gsap.fromTo(bridgePanelRef.current,
-        { y: '100%' },
-        {
-          y: '0%',
-          ease: 'power2.inOut',
-          scrollTrigger: {
-            trigger: section,
-            start: `top+=${heroScrollDist * panelStart} top`,
-            end:   `top+=${heroScrollDist * 1.0}        top`,
-            scrub: panelScrub,
-          },
-        }
-      );
-    }
-
-    // ── "Dominance" — sentence completion on the rising panel ──
-    if (dominanceRevealRef.current && dominanceTextRef.current) {
-      const domSplit = new SplitType(dominanceTextRef.current, { types: 'chars' });
-      const domTl    = gsap.timeline({ paused: true });
-
-      domTl.to(dominanceRevealRef.current, { opacity: 1, duration: 0.06 }, 0);
-      domTl.fromTo(
-        domSplit.chars,
-        isMobile
-          ? { clipPath: 'inset(0% 105% 0% 0%)', opacity: 0, y: 14 }
-          : { clipPath: 'inset(0% 105% 0% 0%)', opacity: 0, y: 22, rotateX: -28, filter: 'blur(10px)', transformOrigin: '50% 100%' },
-        isMobile
-          ? { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, y: 0, stagger: { each: 0.055, ease: 'power1.inOut' }, duration: 0.42, ease: 'power3.out' }
-          : { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, y: 0, rotateX: 0, filter: 'blur(0px)', stagger: { each: 0.065, ease: 'power1.inOut' }, duration: 0.48, ease: 'power3.out' },
-        0.10
-      );
-
-      ScrollTrigger.create({
-        trigger: section,
-        start: `top+=${heroScrollDist * domStart} top`,
-        end:   `top+=${heroScrollDist * domEnd}   top`,
-        scrub: scrubBase,
-        animation: domTl,
-      });
-    }
 
     return () => st.kill();
   }, [setProgress]);
@@ -266,8 +289,11 @@ export default function HeroSection({ onLoadProgress, onLoadComplete }: HeroSect
         }}
       />
 
-      {/* Bottom gradient — strengthened to blend into bridge */}
-      <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{ height: '40vh', background: 'linear-gradient(to top, #080808 0%, rgba(8,8,8,0.7) 35%, transparent 100%)' }} />
+      {/* Bottom gradient */}
+      <div
+        className="absolute bottom-0 left-0 right-0 pointer-events-none"
+        style={{ height: '40vh', background: 'linear-gradient(to top, #080808 0%, rgba(8,8,8,0.7) 35%, transparent 100%)' }}
+      />
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-cinema-black/70 to-transparent pointer-events-none" />
 
       {/* Side vignettes */}
@@ -287,7 +313,7 @@ export default function HeroSection({ onLoadProgress, onLoadComplete }: HeroSect
         <div ref={eyebrowRef} className="flex items-center gap-4 mb-6 opacity-0">
           <div className="w-6 h-px bg-cinema-orange" />
           <span className="text-cinema-orange text-[10px] font-mono tracking-ultra uppercase">
-            Titan Series — 2025
+            DSV Series — 2025
           </span>
         </div>
 
@@ -334,84 +360,78 @@ export default function HeroSection({ onLoadProgress, onLoadComplete }: HeroSect
         </div>
       </div>
 
-      {/* ── "The Science of" — first half of cinematic sentence ── */}
-      {/* Positioned in the upper portion so the rising panel reveals below it */}
+      {/* ── Cinematic title — reveals inside hero, frames 365→480 ── */}
       <div
-        ref={scienceRef}
-        className="absolute inset-x-0 flex flex-col items-center pointer-events-none"
-        style={{ bottom: 'var(--hero-science-bottom)', opacity: 0, zIndex: 10 }}
+        ref={cinematicTitleRef}
+        className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+        style={{ opacity: 0, zIndex: 12 }}
       >
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-6 h-px bg-white/15" />
-          <span className="text-white/20 text-[8px] font-mono tracking-ultra uppercase">Titan X — 2025</span>
-          <div className="w-6 h-px bg-white/15" />
-        </div>
+        {/* Horizontal accent line */}
         <div
-          ref={scienceLine1Ref}
-          className="font-mono uppercase text-white/65 leading-none text-center"
+          ref={titleAccentRef}
           style={{
-            fontSize: 'clamp(1.5rem, 3.8vw, 3.6rem)',
-            letterSpacing: '0.18em',
-            perspective: '600px',
-            transformStyle: 'preserve-3d',
+            width: 'clamp(56px, 7vw, 96px)',
+            height: '1px',
+            marginBottom: 'clamp(20px, 3vh, 32px)',
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
+            transform: 'scaleX(0)',
+            opacity: 0,
+          }}
+        />
+
+        {/* Eyebrow label */}
+        <div
+          ref={titleEyebrowRef}
+          className="flex items-center gap-3"
+          style={{ marginBottom: 'clamp(18px, 2.5vh, 28px)', opacity: 0 }}
+        >
+          <div style={{ width: '16px', height: '1px', background: 'rgba(255,255,255,0.16)' }} />
+          <span
+            className="font-mono uppercase"
+            style={{ fontSize: '9px', color: 'rgba(255,255,255,0.28)', letterSpacing: '0.24em' }}
+          >
+            DSV X — 2025
+          </span>
+          <div style={{ width: '16px', height: '1px', background: 'rgba(255,255,255,0.16)' }} />
+        </div>
+
+        {/* Line 1: "The Science of" */}
+        <div
+          ref={titleLine1Ref}
+          className="font-mono uppercase text-center leading-none"
+          style={{
+            fontSize: 'clamp(1.2rem, 3vw, 3rem)',
+            letterSpacing: '0.22em',
+            color: 'rgba(255,255,255,0.48)',
+            marginBottom: 'clamp(8px, 1.2vh, 16px)',
           }}
         >
           The Science of
         </div>
-      </div>
 
-      {/* ── Cinematic bridge-emergence panel ── */}
-      {/* Rises from below the hero, creates physical "next section arriving" feel */}
-      <div
-        ref={bridgePanelRef}
-        className="absolute inset-x-0 bottom-0 pointer-events-none"
-        style={{
-          height: 'var(--hero-panel-height)',
-          transform: 'translateY(100%)',
-          zIndex: 8,
-          background: 'linear-gradient(to bottom, transparent 0%, rgba(7,7,7,0.55) 18%, rgba(7,7,7,0.88) 40%, #070707 62%)',
-        }}
-      >
-        {/* Atmospheric scan-line texture inside panel */}
+        {/* Line 2: "Dominance" */}
         <div
-          className="absolute inset-0 opacity-[0.025]"
+          ref={titleLine2Ref}
+          className="font-mono uppercase text-center leading-none"
           style={{
-            backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.5) 3px, rgba(255,255,255,0.5) 4px)',
-          }}
-        />
-        {/* Subtle horizontal light at panel top edge */}
-        <div
-          className="absolute inset-x-0 top-0 h-px"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.12) 30%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.12) 70%, transparent)' }}
-        />
-      </div>
-
-      {/* ── "Dominance" — sentence completion on the rising panel ── */}
-      <div
-        ref={dominanceRevealRef}
-        className="absolute inset-x-0 flex flex-col items-center pointer-events-none"
-        style={{ bottom: 'var(--hero-dom-bottom)', opacity: 0, zIndex: 9 }}
-      >
-        {/* Connector — thin line linking "The Science of" to "Dominance" */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-8 h-px" style={{ background: 'rgba(255,255,255,0.08)' }} />
-          <div className="w-1 h-1 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }} />
-          <div className="w-8 h-px" style={{ background: 'rgba(255,255,255,0.08)' }} />
-        </div>
-        <div
-          ref={dominanceTextRef}
-          className="font-mono uppercase leading-none text-center"
-          style={{
-            fontSize: 'clamp(2.2rem, 5.5vw, 5.5rem)',
-            letterSpacing: '0.12em',
-            color: 'rgba(255,255,255,0.88)',
-            perspective: '800px',
-            transformStyle: 'preserve-3d',
-            textShadow: '0 0 60px rgba(255,255,255,0.1), 0 0 120px rgba(255,255,255,0.05)',
+            fontSize: 'clamp(2rem, 5vw, 5rem)',
+            letterSpacing: '0.14em',
+            color: 'rgba(255,255,255,0.92)',
+            textShadow: '0 0 80px rgba(255,255,255,0.1), 0 0 160px rgba(255,255,255,0.05)',
           }}
         >
           Dominance
         </div>
+
+        {/* Bottom accent */}
+        <div
+          style={{
+            width: 'clamp(28px, 3.5vw, 44px)',
+            height: '1px',
+            marginTop: 'clamp(20px, 3vh, 32px)',
+            background: 'rgba(255,255,255,0.1)',
+          }}
+        />
       </div>
 
       {/* Atmospheric particles */}

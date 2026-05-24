@@ -5,7 +5,7 @@ import { useGSAP } from '@gsap/react';
 import { gsap } from '@/lib/gsap';
 
 const footerLinks = {
-  Models: ['Titan X', 'Titan Pro', 'Titan S', 'Titan E'],
+  Fleet: ['DSV X', 'DSV Pro', 'DSV Sprint', 'DSV Electric'],
   Company: ['Our Story', 'Heritage', 'Careers', 'Press'],
   Support: ['Configure', 'Dealerships', 'Service', 'Contact'],
   Legal: ['Privacy', 'Terms', 'Cookies', 'Sitemap'],
@@ -78,7 +78,7 @@ export default function FooterSection() {
           className="footer-logo font-mono uppercase text-cinema-white/[0.025] leading-none select-none"
           style={{ fontSize: 'clamp(8rem, 20vw, 20rem)', letterSpacing: '-0.04em' }}
         >
-          TITAN
+          DSV
         </div>
       </div>
 
@@ -122,10 +122,10 @@ export default function FooterSection() {
                 <path d="M9 16h14M16 9v14" stroke="rgba(255,255,255,0.5)" strokeWidth="1" />
                 <circle cx="16" cy="16" r="3" fill="rgba(255,255,255,0.6)" />
               </svg>
-              <span className="text-cinema-white font-mono text-sm tracking-cinema uppercase">TITAN</span>
+              <span className="text-cinema-white font-mono text-sm tracking-cinema uppercase">DSV</span>
             </div>
             <p className="text-cinema-silver/40 font-mono text-[11px] leading-relaxed max-w-xs">
-              Engineering excellence since 1968. The pinnacle of automotive achievement.
+              Redefining global logistics since 1976. The future of supply chain intelligence.
             </p>
           </div>
 
@@ -155,7 +155,7 @@ export default function FooterSection() {
         {/* Bottom bar */}
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-cinema-silver/20 text-[10px] font-mono">
-            © 2025 Titan Automotive. All rights reserved.
+            © 2025 DSV Global Logistics. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             {['IG', 'YT', 'X', 'LI'].map((social) => (

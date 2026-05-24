@@ -8,7 +8,6 @@ import { useLenis } from '@/hooks/useLenis';
 
 /* Dynamic imports — all client-only, no SSR */
 const HeroSection              = dynamic(() => import('@/components/sections/HeroSection'),              { ssr: false });
-const CinematicBridgeSection   = dynamic(() => import('@/components/sections/CinematicBridgeSection'),  { ssr: false });
 const PowerOutputSection       = dynamic(() => import('@/components/sections/PowerOutputSection'),       { ssr: false });
 const ScrollStorySection       = dynamic(() => import('@/components/sections/ScrollStorySection'),       { ssr: false });
 const YOSSection               = dynamic(() => import('@/components/sections/YOSSection'),               { ssr: false });
@@ -46,22 +45,19 @@ export default function Home() {
       <main className="relative bg-cinema-black">
         <Navigation />
 
-        {/* ── 1. Hero — 240-frame cinematic scroll sequence ── */}
+        {/* ── 1. Hero — 480-frame cinematic scroll sequence ── */}
         <HeroSection
           onLoadProgress={handleLoadProgress}
           onLoadComplete={handleLoadComplete}
         />
 
-        {/* ── 2. Bridge — seamless continuation from hero ── */}
-        <CinematicBridgeSection />
-
-        {/* ── 3. Power Output — reversible scrub stats ── */}
+        {/* ── 2. Power Output — reversible scrub stats ── */}
         <PowerOutputSection />
 
         {/* ── 4. Scroll Story — sticky video + progressive copy ── */}
         <ScrollStorySection />
 
-        {/* ── 5. YOS — TITAN OPERATING SYSTEM → TOS morph ── */}
+        {/* ── 5. YOS — DIGITAL · SUPPLY · VISION → DSV morph ── */}
         <YOSSection />
 
         {/* ── 6. Collection — horizontal carousel ── */}
