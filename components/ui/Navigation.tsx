@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { gsap } from '@/lib/gsap';
 
-const navItems = ['Heritage', 'Collection', 'Performance', 'Contact'];
+const navItems = ['Network', 'Industries', 'Intelligence', 'Contact'];
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);

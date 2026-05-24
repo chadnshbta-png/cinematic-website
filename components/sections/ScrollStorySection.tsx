@@ -158,7 +158,7 @@ export default function ScrollStorySection() {
         <div className="flex items-center gap-4 mb-8">
           <div className="w-8 h-px bg-white/25" />
           <span className="text-white/35 text-[10px] font-mono tracking-ultra uppercase">
-            Engineering
+            Operations
           </span>
         </div>
 
@@ -168,9 +168,9 @@ export default function ScrollStorySection() {
           className="font-mono uppercase text-cinema-white leading-none mb-24"
           style={{ fontSize: 'clamp(2.5rem, 6vw, 5.5rem)', letterSpacing: '-0.03em', perspective: '800px' }}
         >
-          The Science of
+          Engineering
           <br />
-          <span className="text-white">Dominance</span>
+          <span className="text-white">Global Movement</span>
         </h2>
       </div>
 

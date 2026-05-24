@@ -14,6 +14,7 @@ const YOSSection               = dynamic(() => import('@/components/sections/YOS
 const CollectionSection        = dynamic(() => import('@/components/sections/CollectionSection'),        { ssr: false });
 const ParallaxSection          = dynamic(() => import('@/components/sections/ParallaxSection'),          { ssr: false });
 const StorySection             = dynamic(() => import('@/components/sections/StorySection'),             { ssr: false });
+const ValuesSection            = dynamic(() => import('@/components/sections/ValuesSection'),            { ssr: false });
 const SpecsSection             = dynamic(() => import('@/components/sections/SpecsSection'),             { ssr: false });
 const FooterSection            = dynamic(() => import('@/components/sections/FooterSection'),            { ssr: false });
 const CustomCursor             = dynamic(() => import('@/components/ui/CustomCursor'),                   { ssr: false });
@@ -68,6 +69,9 @@ export default function Home() {
 
         {/* ── 7. Our Story — cinematic timeline ── */}
         <StorySection />
+
+        {/* ── 7b. Values — five operating principles ── */}
+        <ValuesSection />
 
         {/* ── 8. Specs — animated performance numbers ── */}
         <SpecsSection />

@@ -322,7 +322,7 @@ export default function HeroSection({ onLoadProgress, onLoadComplete }: HeroSect
           className="font-mono text-cinema-white/90 uppercase leading-none mb-2 opacity-0"
           style={{ fontSize: 'clamp(2.8rem, 7vw, 7.5rem)', letterSpacing: '-0.02em', transformStyle: 'preserve-3d' }}
         >
-          Built for
+          Moving the
         </div>
 
         <div
@@ -330,7 +330,7 @@ export default function HeroSection({ onLoadProgress, onLoadComplete }: HeroSect
           className="font-mono text-cinema-orange uppercase leading-none mb-10 opacity-0 overflow-visible"
           style={{ fontSize: 'clamp(3.5rem, 9.5vw, 10rem)', letterSpacing: '-0.03em', transformStyle: 'preserve-3d' }}
         >
-          LEGENDS
+          WORLD
         </div>
 
         <div ref={ctaRef} className="flex items-center gap-8 mt-2 opacity-0 pointer-events-auto">
@@ -338,13 +338,13 @@ export default function HeroSection({ onLoadProgress, onLoadComplete }: HeroSect
             href="#collection"
             className="group relative inline-flex items-center gap-4 text-cinema-black text-[10px] font-mono tracking-ultra uppercase bg-cinema-orange px-8 py-4 overflow-hidden transition-colors duration-500 hover:bg-cinema-orange-bright"
           >
-            <span className="relative z-10">Explore Collection</span>
+            <span className="relative z-10">Explore Network</span>
             <svg width="14" height="8" viewBox="0 0 14 8" fill="none" className="relative z-10 group-hover:translate-x-1.5 transition-transform duration-300">
               <path d="M0 4h12M8 1l3 3-3 3" stroke="currentColor" strokeWidth="1.2" />
             </svg>
           </a>
           <a href="#story" className="text-cinema-silver/60 text-[10px] font-mono tracking-ultra uppercase hover:text-cinema-white transition-colors duration-300">
-            Our Story
+            Our Network
           </a>
         </div>
       </div>

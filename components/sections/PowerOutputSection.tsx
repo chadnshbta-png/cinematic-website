@@ -5,10 +5,10 @@ import { gsap, ScrollTrigger } from '@/lib/gsap';
 import SplitType from 'split-type';
 
 const statRows = [
-  { label: 'Horsepower',  value: '1,200', unit: 'HP',   width: '100%' },
-  { label: 'Torque',      value: '1,850', unit: 'Nm',   width: '90%'  },
-  { label: 'Acceleration',value: '3.8',   unit: 's',    width: '75%'  },
-  { label: 'Top Speed',   value: '280',   unit: 'km/h', width: '85%'  },
+  { label: 'Active Countries',  value: '90+',    unit: 'Nations', width: '100%' },
+  { label: 'Global Facilities', value: '3,000+', unit: 'Sites',   width: '92%'  },
+  { label: 'Team Members',      value: '160K+',  unit: 'People',  width: '96%'  },
+  { label: 'Annual Shipments',  value: '75M+',   unit: 'Freight', width: '88%'  },
 ];
 
 export default function PowerOutputSection() {
@@ -142,7 +142,7 @@ export default function PowerOutputSection() {
           <div className="flex items-center gap-3 mb-8">
             <div className="w-5 h-px bg-white/20" />
             <span className="text-white/35 text-[10px] font-mono tracking-ultra uppercase">
-              Power Output
+              Global Scale
             </span>
           </div>
 
@@ -151,7 +151,7 @@ export default function PowerOutputSection() {
             ref={headingRef}
             className="text-white/40 text-[10px] font-mono tracking-widest uppercase mb-4"
           >
-            Horsepower
+            Countries
           </div>
 
           {/* Big number */}
@@ -163,7 +163,7 @@ export default function PowerOutputSection() {
               letterSpacing: '-0.04em',
             }}
           >
-            1,200
+            90+
           </div>
 
           {/* Stat rows with bars */}
@@ -197,7 +197,7 @@ export default function PowerOutputSection() {
           <div className="mt-10 flex items-center gap-3">
             <div className="w-2 h-2 border rotate-45" style={{ borderColor: 'rgba(255,255,255,0.25)' }} />
             <span className="text-white/25 text-[10px] font-mono tracking-widest uppercase">
-              V12 Hybrid — Twin Turbocharged
+              DSV Operating System — Live Network
             </span>
           </div>
         </div>
@@ -225,10 +225,10 @@ export default function PowerOutputSection() {
           <div className="absolute inset-0 flex flex-col justify-end p-10 md:p-14">
             <div className="grid grid-cols-2 gap-8">
               {[
-                { label: '0–100', value: '3.8s' },
-                { label: 'Range',  value: '820km' },
-                { label: 'Payload', value: '2.4t' },
-                { label: 'Modes',   value: '7' },
+                { label: 'Air Routes',  value: '300+' },
+                { label: 'Sea Routes',  value: '500+' },
+                { label: 'Road Lines',  value: '1,200+' },
+                { label: 'Ports',       value: '850+' },
               ].map(stat => (
                 <div key={stat.label} className="border-l border-white/20 pl-4">
                   <p className="text-white/50 text-[9px] font-mono tracking-widest uppercase mb-1">

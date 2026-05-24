@@ -6,19 +6,19 @@ import { gsap } from '@/lib/gsap';
 import SplitType from 'split-type';
 
 const specs = [
-  { label: 'Horsepower', value: 1200, unit: 'HP', display: '1,200', percentage: 100 },
-  { label: 'Torque', value: 1850, unit: 'Nm', display: '1,850', percentage: 95 },
-  { label: 'Acceleration', value: 3.8, unit: 's', display: '3.8', percentage: 75 },
-  { label: 'Top Speed', value: 280, unit: 'km/h', display: '280', percentage: 88 },
-  { label: 'Payload', value: 2400, unit: 'kg', display: '2,400', percentage: 80 },
-  { label: 'Range', value: 820, unit: 'km', display: '820', percentage: 72 },
+  { label: 'Active Routes',    value: 2500000, unit: 'Lanes',   display: '2.5M',   percentage: 100 },
+  { label: 'Daily Shipments',  value: 75000,   unit: 'Freight', display: '75,000', percentage: 95  },
+  { label: 'Global Facilities',value: 3000,    unit: 'Sites',   display: '3,000',  percentage: 90  },
+  { label: 'Countries',        value: 90,      unit: 'Nations', display: '90+',    percentage: 88  },
+  { label: 'Team Members',     value: 160000,  unit: 'People',  display: '160K',   percentage: 95  },
+  { label: 'System Uptime',    value: 99,      unit: '%',       display: '99.8',   percentage: 98  },
 ];
 
 const features = [
-  { icon: '◈', title: 'Adaptive AI Suspension', desc: 'Real-time terrain reading with predictive damping' },
-  { icon: '◇', title: 'Dual Hybrid Powerplant', desc: 'V12 ICE + dual electric motors for seamless torque delivery' },
-  { icon: '○', title: 'Composite Monocoque', desc: 'Aerospace-derived chassis 40% lighter than steel' },
-  { icon: '◉', title: 'Cinematic HUD', desc: '120Hz AR heads-up display with full driver assist suite' },
+  { icon: '◈', title: 'AI Route Intelligence',  desc: 'Machine learning powers real-time route optimization across 2.5M+ global freight lanes' },
+  { icon: '◇', title: 'Shipment Visibility',    desc: 'End-to-end tracking across every freight mode, every border, every handoff in real time' },
+  { icon: '○', title: 'Predictive Analytics',   desc: 'Demand forecasting and proactive disruption management at true planetary scale' },
+  { icon: '◉', title: 'DSV OS Platform',        desc: 'Integrated enterprise logistics management system powering 75,000 daily shipments' },
 ];
 
 export default function SpecsSection() {
@@ -143,7 +143,7 @@ export default function SpecsSection() {
         <div className="flex items-center gap-4 mb-8">
           <div className="w-8 h-px bg-white/25" />
           <span className="text-white/35 text-[10px] font-mono tracking-ultra uppercase">
-            Technical
+            Intelligence
           </span>
         </div>
         <h2
@@ -222,13 +222,13 @@ export default function SpecsSection() {
         <div className="mt-32 pt-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-8" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <div>
             <p className="text-[10px] font-mono tracking-ultra uppercase mb-2" style={{ color: 'rgba(255,255,255,0.35)' }}>
-              Starting From
+              Operational Since
             </p>
             <div
               className="font-mono"
               style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', color: 'rgba(255,255,255,0.85)' }}
             >
-              $280,000
+              1976
             </div>
           </div>
           <div className="flex flex-col gap-3">
@@ -237,13 +237,13 @@ export default function SpecsSection() {
               className="inline-flex items-center gap-4 text-[11px] font-mono tracking-widest uppercase px-10 py-5 transition-all duration-300 hover:bg-white/10"
               style={{ border: '1px solid rgba(255,255,255,0.25)', color: 'rgba(255,255,255,0.9)' }}
             >
-              Configure Yours
+              Request Partnership
               <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
                 <path d="M0 5h14M10 1l4 4-4 4" stroke="currentColor" strokeWidth="1.5" />
               </svg>
             </a>
             <p className="text-[10px] font-mono text-center" style={{ color: 'rgba(255,255,255,0.3)' }}>
-              Available Q2 2025
+              Global coverage · 90+ countries
             </p>
           </div>
         </div>

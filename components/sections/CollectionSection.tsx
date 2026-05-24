@@ -4,24 +4,28 @@ import { useRef, useLayoutEffect } from 'react';
 import { gsap, ScrollTrigger } from '@/lib/gsap';
 import SplitType from 'split-type';
 
-interface TruckModel {
+interface IndustryCard {
   id: string;
   name: string;
   tagline: string;
-  hp: string;
-  torque: string;
+  stat1Value: string;
+  stat1Label: string;
+  stat2Value: string;
+  stat2Label: string;
   accent: string;
 }
 
-const models: TruckModel[] = [
-  { id: 'dsv-x',       name: 'DSV X',       tagline: 'Global Network Apex',          hp: '1,200', torque: '1,850 Nm', accent: '#ffffff' },
-  { id: 'dsv-pro',     name: 'DSV Pro',     tagline: 'Precision Delivered',          hp: '850',   torque: '1,450 Nm', accent: '#c8c8c8' },
-  { id: 'dsv-sprint',  name: 'DSV Sprint',  tagline: 'Maximum Range',                hp: '650',   torque: '1,200 Nm', accent: '#8A9BA8' },
-  { id: 'dsv-electric',name: 'DSV Electric',tagline: 'Zero Emission Intelligence',   hp: '720',   torque: '1,600 Nm', accent: '#a0a8b0' },
+const industries: IndustryCard[] = [
+  { id: 'automotive',   name: 'Automotive',   tagline: 'OEM Supply Chain',          stat1Value: '500+',  stat1Label: 'OEM Partners',         stat2Value: '47',     stat2Label: 'Countries',   accent: '#ffffff' },
+  { id: 'healthcare',   name: 'Healthcare',   tagline: 'Temperature Controlled',    stat1Value: '2–8°C', stat1Label: 'Cold Chain Precision',  stat2Value: '95+',    stat2Label: 'Facilities',  accent: '#c8c8c8' },
+  { id: 'technology',   name: 'Technology',   tagline: 'High-Value Freight',        stat1Value: '99.9%', stat1Label: 'On-Time Delivery',      stat2Value: '6',      stat2Label: 'Continents',  accent: '#8A9BA8' },
+  { id: 'industrial',   name: 'Industrial',   tagline: 'Project Cargo',             stat1Value: '500t',  stat1Label: 'Maximum Payload',       stat2Value: '1,200+', stat2Label: 'Projects',    accent: '#a0a8b0' },
+  { id: 'aerospace',    name: 'Aerospace',    tagline: 'Precision Logistics',       stat1Value: 'AOG',   stat1Label: 'Priority Response',     stat2Value: '24h',    stat2Label: 'Coverage',    accent: '#d0d0d0' },
+  { id: 'consumer',     name: 'Consumer',     tagline: 'E-Commerce & Retail',       stat1Value: '50M+',  stat1Label: 'Annual Parcels',        stat2Value: '3,000+', stat2Label: 'Locations',   accent: '#b8b8b8' },
 ];
 
-const CARD_WIDTH_VW = 88;
-const CARD_GAP_VW  = 4;
+const CARD_WIDTH_VW = 75;
+const CARD_GAP_VW  = 3;
 
 export default function CollectionSection() {
   const wrapperRef   = useRef<HTMLDivElement>(null);
@@ -102,7 +106,7 @@ export default function CollectionSection() {
         <div className="flex items-center gap-4 mb-6">
           <div className="w-8 h-px bg-white/25" />
           <span className="text-white/35 text-[10px] font-mono tracking-ultra uppercase">
-            Our Fleet
+            Our Expertise
           </span>
         </div>
 
@@ -110,11 +114,11 @@ export default function CollectionSection() {
           className="font-mono uppercase text-cinema-white leading-none"
           style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', letterSpacing: '-0.02em' }}
         >
-          The Collection
+          Industry Solutions
         </h2>
 
         <p className="text-cinema-silver/50 mt-4 font-mono text-sm max-w-lg">
-          Four distinct expressions of power, performance, and prestige.
+          Six global verticals. One connected intelligence network.
         </p>
 
         <div className="absolute right-8 md:right-20 bottom-6 flex items-center gap-3 text-cinema-silver/30">
@@ -142,13 +146,13 @@ export default function CollectionSection() {
           ref={trackRef}
           className="absolute top-0 left-0 h-full flex"
           style={{
-            width: `${models.length * (CARD_WIDTH_VW + CARD_GAP_VW)}vw`,
+            width: `${industries.length * (CARD_WIDTH_VW + CARD_GAP_VW)}vw`,
             willChange: 'transform',
           }}
         >
-          {models.map((model, index) => (
+          {industries.map((industry, index) => (
             <div
-              key={model.id}
+              key={industry.id}
               data-card
               className="relative flex-shrink-0 h-full border-r border-white/[0.04] overflow-hidden"
               style={{ width: `${CARD_WIDTH_VW}vw`, marginRight: `${CARD_GAP_VW}vw` }}
@@ -157,7 +161,7 @@ export default function CollectionSection() {
               <div
                 className="absolute inset-0"
                 style={{
-                  background: `linear-gradient(145deg, ${model.accent}14 0%, transparent 55%, rgba(8,8,8,0.92) 100%)`,
+                  background: `linear-gradient(145deg, ${industry.accent}14 0%, transparent 55%, rgba(8,8,8,0.92) 100%)`,
                 }}
               />
               <div className="absolute inset-0 bg-cinema-dark/75" />
@@ -166,18 +170,18 @@ export default function CollectionSection() {
               <div className="absolute inset-0 opacity-[0.04] pointer-events-none">
                 <svg width="100%" height="100%">
                   <defs>
-                    <pattern id={`g-${model.id}`} width="80" height="80" patternUnits="userSpaceOnUse">
-                      <path d="M80 0L0 0 0 80" fill="none" stroke={model.accent} strokeWidth="0.5"/>
+                    <pattern id={`g-${industry.id}`} width="80" height="80" patternUnits="userSpaceOnUse">
+                      <path d="M80 0L0 0 0 80" fill="none" stroke={industry.accent} strokeWidth="0.5"/>
                     </pattern>
                   </defs>
-                  <rect width="100%" height="100%" fill={`url(#g-${model.id})`}/>
+                  <rect width="100%" height="100%" fill={`url(#g-${industry.id})`}/>
                 </svg>
               </div>
 
               {/* Large ghost number */}
               <div
                 className="absolute right-10 top-1/2 -translate-y-1/2 font-mono font-bold leading-none select-none pointer-events-none"
-                style={{ fontSize: 'clamp(14rem,28vw,22rem)', color: model.accent, opacity: 0.04 }}
+                style={{ fontSize: 'clamp(14rem,28vw,22rem)', color: industry.accent, opacity: 0.04 }}
               >
                 {String(index + 1).padStart(2, '0')}
               </div>
@@ -186,15 +190,15 @@ export default function CollectionSection() {
               <div className="absolute inset-0 flex flex-col justify-end p-10 md:p-16">
                 {/* Index label */}
                 <div className="absolute top-10 left-12 text-cinema-silver/25 text-[10px] font-mono tracking-widest">
-                  {String(index + 1).padStart(2, '0')} — {String(models.length).padStart(2, '0')}
+                  {String(index + 1).padStart(2, '0')} — {String(industries.length).padStart(2, '0')}
                 </div>
 
                 {/* Accent bar */}
-                <div className="w-12 h-0.5 mb-5" style={{ backgroundColor: model.accent }} />
+                <div className="w-12 h-0.5 mb-5" style={{ backgroundColor: industry.accent }} />
 
                 {/* Tagline */}
                 <p className="text-cinema-silver/40 text-[10px] font-mono tracking-ultra uppercase mb-3">
-                  {model.tagline}
+                  {industry.tagline}
                 </p>
 
                 {/* Name */}
@@ -202,41 +206,40 @@ export default function CollectionSection() {
                   className="font-mono uppercase text-cinema-white leading-none mb-8"
                   style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', letterSpacing: '-0.02em' }}
                 >
-                  {model.name}
+                  {industry.name}
                 </h3>
 
-                {/* Specs */}
+                {/* Metrics */}
                 <div className="flex items-center gap-10 mb-8">
                   <div>
-                    <p className="text-[9px] font-mono tracking-widest uppercase mb-1" style={{ color: model.accent }}>
-                      Power
+                    <p className="text-[9px] font-mono tracking-widest uppercase mb-1" style={{ color: industry.accent }}>
+                      {industry.stat1Label}
                     </p>
-                    <p className="text-cinema-white font-mono text-3xl leading-none">{model.hp}</p>
-                    <p className="text-cinema-silver/30 text-[9px] font-mono mt-0.5">HP</p>
+                    <p className="text-cinema-white font-mono text-3xl leading-none">{industry.stat1Value}</p>
                   </div>
                   <div className="w-px h-14 bg-white/8" />
                   <div>
-                    <p className="text-[9px] font-mono tracking-widest uppercase mb-1" style={{ color: model.accent }}>
-                      Torque
+                    <p className="text-[9px] font-mono tracking-widest uppercase mb-1" style={{ color: industry.accent }}>
+                      {industry.stat2Label}
                     </p>
-                    <p className="text-cinema-white font-mono text-2xl leading-none">{model.torque}</p>
+                    <p className="text-cinema-white font-mono text-2xl leading-none">{industry.stat2Value}</p>
                   </div>
                 </div>
 
                 {/* CTA */}
                 <button
                   className="self-start text-[10px] font-mono tracking-widest uppercase px-8 py-3.5 border transition-all duration-400 hover:text-cinema-black"
-                  style={{ borderColor: model.accent, color: model.accent }}
+                  style={{ borderColor: industry.accent, color: industry.accent }}
                   onMouseEnter={e => {
-                    (e.currentTarget as HTMLButtonElement).style.backgroundColor = model.accent;
+                    (e.currentTarget as HTMLButtonElement).style.backgroundColor = industry.accent;
                     (e.currentTarget as HTMLButtonElement).style.color = '#080808';
                   }}
                   onMouseLeave={e => {
                     (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent';
-                    (e.currentTarget as HTMLButtonElement).style.color = model.accent;
+                    (e.currentTarget as HTMLButtonElement).style.color = industry.accent;
                   }}
                 >
-                  Configure
+                  Learn More
                 </button>
               </div>
             </div>
@@ -245,8 +248,8 @@ export default function CollectionSection() {
 
         {/* Progress dots */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-          {models.map((m, i) => (
-            <div key={i} className="w-1 h-1 rounded-full bg-white/20" style={{ backgroundColor: i === 0 ? m.accent : undefined }} />
+          {industries.map((ind, i) => (
+            <div key={i} className="w-1 h-1 rounded-full bg-white/20" style={{ backgroundColor: i === 0 ? ind.accent : undefined }} />
           ))}
         </div>
       </div>

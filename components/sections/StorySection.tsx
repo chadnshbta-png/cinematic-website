@@ -205,17 +205,17 @@ export default function StorySection() {
         <div className="flex items-center gap-4 mb-8">
           <div className="w-8 h-px bg-white/25" />
           <span className="text-white/35 text-[10px] font-mono tracking-ultra uppercase">
-            Heritage
+            Purpose
           </span>
         </div>
         <h2
           className="story-heading font-mono uppercase text-white/85 leading-none"
           style={{ fontSize: 'clamp(3rem, 8vw, 7rem)', letterSpacing: '-0.03em' }}
         >
-          Our Story
+          Keeping Supply Chains Flowing
         </h2>
         <p className="text-white/40 font-mono text-sm mt-6 max-w-md">
-          Five decades of logistics obsession, distilled into one global network.
+          Millions of shipments. 90+ countries. One connected global network.
         </p>
       </div>
 
