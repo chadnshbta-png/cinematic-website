@@ -353,6 +353,7 @@ export default function HeroSection({ onLoadProgress, onLoadComplete }: HeroSect
       <div
         ref={scrollHintRef}
         className="absolute bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-0 pointer-events-none"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
         <span className="text-cinema-silver/30 text-[9px] font-mono tracking-ultra uppercase">Scroll</span>
         <div className="w-5 h-8 border border-white/20 rounded-full flex items-start justify-center pt-1.5">
@@ -363,7 +364,7 @@ export default function HeroSection({ onLoadProgress, onLoadComplete }: HeroSect
       {/* ── Cinematic title — reveals inside hero, frames 365→480 ── */}
       <div
         ref={cinematicTitleRef}
-        className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+        className="absolute inset-0 flex flex-col items-center justify-center px-5 md:px-0 pointer-events-none"
         style={{ opacity: 0, zIndex: 12 }}
       >
         {/* Horizontal accent line */}
@@ -400,7 +401,7 @@ export default function HeroSection({ onLoadProgress, onLoadComplete }: HeroSect
           ref={titleLine1Ref}
           className="font-mono uppercase text-center leading-none"
           style={{
-            fontSize: 'clamp(1.2rem, 3vw, 3rem)',
+            fontSize: 'clamp(1.5rem, 3.5vw, 3rem)',
             letterSpacing: '0.22em',
             color: 'rgba(255,255,255,0.48)',
             marginBottom: 'clamp(8px, 1.2vh, 16px)',
@@ -414,7 +415,7 @@ export default function HeroSection({ onLoadProgress, onLoadComplete }: HeroSect
           ref={titleLine2Ref}
           className="font-mono uppercase text-center leading-none"
           style={{
-            fontSize: 'clamp(2rem, 5vw, 5rem)',
+            fontSize: 'clamp(2.4rem, 6vw, 5rem)',
             letterSpacing: '0.14em',
             color: 'rgba(255,255,255,0.92)',
             textShadow: '0 0 80px rgba(255,255,255,0.1), 0 0 160px rgba(255,255,255,0.05)',

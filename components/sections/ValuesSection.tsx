@@ -3,45 +3,43 @@
 import { useRef, useLayoutEffect } from 'react';
 import { gsap, ScrollTrigger } from '@/lib/gsap';
 
+// ─── Toggle DEBUG to verify card order before reviewing cinematic styling ───
+const DEBUG = false;
+const DEBUG_BG = ['#e50000', '#e57700', '#e5d200', '#009921', '#0058e5', '#8800e5'];
+
 const values = [
   {
-    index: '01',
-    label: 'Foundation',
+    index: '01', label: 'Foundation',
     title: 'Customers\nFirst',
     body: 'Every route optimized, every shipment handled, every decision made — with the people and businesses that trust us at the center.',
     accent: '#e8e8e8',
   },
   {
-    index: '02',
-    label: 'Discipline',
+    index: '02', label: 'Discipline',
     title: 'Operational\nExcellence',
     body: 'Industry-leading on-time performance across 90+ countries. 160,000 specialists operating as one unified system.',
     accent: '#c0c0c0',
   },
   {
-    index: '03',
-    label: 'Reach',
+    index: '03', label: 'Reach',
     title: 'Global\nConnectivity',
-    body: 'Air, sea, road — every mode, every market, every moment. A living network that keeps the world\'s supply chains in constant, intelligent motion.',
+    body: "Air, sea, road — every mode, every market, every moment. A living network that keeps the world's supply chains in constant, intelligent motion.",
     accent: '#9eb0bc',
   },
   {
-    index: '04',
-    label: 'Technology',
+    index: '04', label: 'Technology',
     title: 'Intelligent\nInfrastructure',
     body: 'The DSV Operating System processes millions of data points per second — predicting disruption, rerouting in real time, learning with every shipment.',
     accent: '#8a9ba8',
   },
   {
-    index: '05',
-    label: 'Standard',
+    index: '05', label: 'Standard',
     title: 'Precision\nLogistics',
     body: 'Zero tolerance for error at planetary scale. Temperature-controlled healthcare freight, aerospace AOG response, high-value technology cargo — handled with surgical precision.',
     accent: '#78909c',
   },
   {
-    index: '06',
-    label: 'Future',
+    index: '06', label: 'Future',
     title: 'Sustainable\nMovement',
     body: 'The next chapter of global logistics is green. DSV is committed to net-zero by 2050 — cutting emissions across every freight lane, every corridor, every continent.',
     accent: '#607d8b',
@@ -51,284 +49,163 @@ const values = [
 const N = values.length;
 
 export default function ValuesSection() {
-  const outerRef    = useRef<HTMLDivElement>(null);
-  const stickyRef   = useRef<HTMLDivElement>(null);
-  const stackRef    = useRef<HTMLDivElement>(null);
-  const cardRefs    = useRef<(HTMLDivElement | null)[]>([]);
-  const glowRef     = useRef<HTMLDivElement>(null);
-  const stRef       = useRef<ScrollTrigger | null>(null);
-  const tlRef       = useRef<gsap.core.Timeline | null>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const cardRefs   = useRef<(HTMLDivElement | null)[]>([]);
 
   useLayoutEffect(() => {
-    const outer  = outerRef.current;
-    const sticky = stickyRef.current;
-    const stack  = stackRef.current;
-    if (!outer || !sticky || !stack) return;
+    const section = sectionRef.current;
+    if (!section) return;
 
-    const calc = () => {
-      const mobile = window.innerWidth < 768;
-      // N-1 transitions (card 0 is pre-visible; cards 1..N-1 animate in)
-      // Keep per-card scroll generous (1.1 vh each) without a dead zone at the end
-      const transitions = N - 1;
-      return {
-        mobile,
-        totalScroll: window.innerHeight * transitions * (mobile ? 0.9 : 1.1),
-      };
-    };
+    const cards: HTMLDivElement[] = [];
+    for (let i = 0; i < N; i++) {
+      const c = cardRefs.current[i];
+      if (!c) continue;
+      cards.push(c);
+    }
+    if (cards.length !== N) return;
 
-    let { mobile: isMobile, totalScroll } = calc();
-
-    // CSS sticky requires an explicit outer height — set it now
-    outer.style.height = `${window.innerHeight + totalScroll}px`;
-
-    // Stack depth → visual state — NO opacity reduction
-    // depth is conveyed by scale + blur + y + rotateX; solid surfaces handle masking
-    const stackState = (depth: number) => ({
-      y:       -depth * (isMobile ? 24 : 36),
-      scale:   Math.max(0.84, 1 - depth * 0.032),
-      rotateX: Math.min(depth * 1.5, 7),
-      filter:  `blur(${Math.min(depth * 0.55, 2.8)}px)`,
-    });
-
-    // SEG spans 1/(N-1) of the timeline — one segment per incoming card
+    // ── Timeline ───────────────────────────────────────────────────────────
+    // Cards 1–(N-1) each slide from y:110% → y:0 sequentially.
+    // fromTo with explicit from-state so GSAP never guesses initial position.
+    // The only animated property is translateY — nothing else.
     const SEG = 1 / (N - 1);
+    const tl  = gsap.timeline({ paused: true });
 
-    // Card 0 is the FOUNDATION — visible and stable from the first frame
-    const card0 = cardRefs.current[0];
-    if (card0) {
-      gsap.set(card0, { y: 0, scale: 1, opacity: 1, rotateX: 0, filter: 'blur(0px)', zIndex: 1 });
-    }
-
-    // Cards 1..N-1 start below the viewport, invisible
     for (let i = 1; i < N; i++) {
-      const card = cardRefs.current[i];
-      if (!card) continue;
-      gsap.set(card, {
-        y:       window.innerHeight * 1.15,
-        scale:   1,
-        opacity: 0,
-        rotateX: 0,
-        filter:  'blur(0px)',
-        zIndex:  i + 1,
-      });
-    }
-
-    // Build the main scrub timeline (paused — driven by ScrollTrigger)
-    const tl = gsap.timeline({ paused: true });
-    tlRef.current = tl;
-
-    // Each segment: one incoming card rises, all settled cards shift back one depth
-    // duration = full SEG so tweens tile exactly — zero dead zones
-    for (let i = 1; i < N; i++) {
-      const card = cardRefs.current[i];
-      if (!card) continue;
-
-      const segStart = (i - 1) * SEG;
-
-      // Incoming card rises from below into the active (front) position
       tl.fromTo(
-        card,
-        { y: window.innerHeight * 1.15, opacity: 0 },
-        {
-          y:        0,
-          scale:    1,
-          opacity:  1,
-          rotateX:  0,
-          filter:   'blur(0px)',
-          ease:     'power3.out',
-          duration: SEG,
-        },
-        segStart
-      );
-
-      // All previously settled cards (0 through i-1) push back one depth level
-      for (let j = 0; j < i; j++) {
-        const prev = cardRefs.current[j];
-        if (!prev) continue;
-        tl.to(
-          prev,
-          {
-            ...stackState(i - j),
-            ease:     'power2.inOut',
-            duration: SEG,
-          },
-          segStart
-        );
-      }
-    }
-
-    // Ambient glow breathes across the full sequence
-    if (glowRef.current) {
-      tl.fromTo(
-        glowRef.current,
-        { opacity: 0.15 },
-        { opacity: 0.55, ease: 'none', duration: 1 },
-        0
+        cards[i],
+        { y: '110%' },
+        { y: 0, ease: 'power2.inOut', duration: SEG },
+        (i - 1) * SEG,
       );
     }
 
-    // Plain scroll-driven trigger — NO GSAP pin (CSS sticky handles sticking)
-    // scrub:0.9 keeps motion responsive without feeling mechanical
-    stRef.current = ScrollTrigger.create({
-      trigger:             outer,
-      start:               'top top',
-      end:                 () => `+=${totalScroll}`,
-      scrub:               0.9,
-      invalidateOnRefresh: true,
-      animation:           tl,
+    // ── ScrollTrigger — pin: true replaces CSS sticky entirely ─────────────
+    // GSAP owns the scroll space via pinSpacing; no section.style.height needed.
+    const st = ScrollTrigger.create({
+      trigger:    section,
+      pin:        true,
+      pinSpacing: true,
+      start:      'top top',
+      end:        () => `+=${(N - 1) * window.innerHeight}`,
+      scrub:      0.4,
+      animation:  tl,
     });
-
-    // Recalculate outer height on resize so CSS sticky keeps working
-    const onResize = () => {
-      const next = calc();
-      isMobile    = next.mobile;
-      totalScroll = next.totalScroll;
-      outer.style.height = `${window.innerHeight + totalScroll}px`;
-      ScrollTrigger.refresh();
-    };
-    window.addEventListener('resize', onResize);
 
     return () => {
-      stRef.current?.kill();
-      tlRef.current?.kill();
-      window.removeEventListener('resize', onResize);
-      outer.style.height = '';
+      st.kill();
+      tl.kill();
+      gsap.set(cards, { clearProps: 'all' });
     };
   }, []);
 
   return (
     <section
-      ref={outerRef}
+      ref={sectionRef}
       id="values"
       className="relative bg-cinema-black"
-      style={{ isolation: 'isolate' }}
+      style={{ height: '100vh' }}
     >
-      {/*
-        CSS position:sticky — activates exactly when this section's top
-        hits the viewport top, with zero early activation.
-        overflow:hidden + clip-path:inset(0) on THIS element (not its parent)
-        so CSS sticky works while cards stay fully contained.
-      */}
-      <div
-        ref={stickyRef}
-        className="relative w-full overflow-hidden"
-        style={{ height: '100vh', position: 'sticky', top: 0, clipPath: 'inset(0)' }}
-      >
-        {/* Ambient background glow */}
-        <div
-          ref={glowRef}
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'radial-gradient(ellipse 70% 60% at 50% 60%, rgba(138,155,168,0.18) 0%, transparent 70%)',
-            opacity: 0.15,
-          }}
-        />
-
-        {/* Header — always visible at top */}
-        <div className="absolute top-0 left-0 right-0 z-50 px-8 md:px-20 pt-14 pb-6 pointer-events-none">
-          <div className="flex items-center gap-4 mb-3">
-            <div className="w-8 h-px bg-white/25" />
-            <span className="text-white/35 text-[10px] font-mono tracking-ultra uppercase">
-              Operating Principles
-            </span>
-          </div>
-          <h2
-            className="font-mono uppercase text-cinema-white leading-none"
-            style={{ fontSize: 'clamp(2rem, 4.5vw, 3.8rem)', letterSpacing: '-0.03em' }}
-          >
-            What Drives Us
-          </h2>
-        </div>
-
-        {/* Counter — top right */}
-        <div className="absolute top-14 right-8 md:right-20 z-50 text-right pointer-events-none">
-          <span className="font-mono text-[10px] tracking-widest uppercase text-white/25">
-            0{N} Principles
+      {/* Section header — always above cards */}
+      <div className="absolute top-0 left-0 right-0 z-[100] px-8 md:px-20 pt-14 pb-6 pointer-events-none">
+        <div className="flex items-center gap-4 mb-3">
+          <div className="w-8 h-px bg-white/25" />
+          <span className="text-white/35 text-[10px] font-mono tracking-[0.25em] uppercase">
+            Operating Principles
           </span>
         </div>
+        <h2
+          className="font-mono uppercase text-white leading-none"
+          style={{ fontSize: 'clamp(2rem, 4.5vw, 3.8rem)', letterSpacing: '-0.03em' }}
+        >
+          What Drives Us
+        </h2>
+      </div>
 
-        {/* Card stack container */}
+      {/* Counter */}
+      <div className="absolute top-14 right-8 md:right-20 z-[100] text-right pointer-events-none">
+        <span className="font-mono text-[10px] tracking-widest uppercase text-white/25">
+          0{N} Principles
+        </span>
+      </div>
+
+      {/*
+        Card stack.
+        overflow:hidden clips rising cards below the container edge.
+        transform:translateZ(0) promotes to a GPU compositing layer so
+        the overflow clip is enforced even when child transforms are composited.
+        NO willChange on card wrappers — GSAP temporarily promotes only during motion.
+      */}
+      <div className="absolute inset-0 flex items-end justify-center">
         <div
-          ref={stackRef}
-          className="absolute inset-0 flex items-end justify-center pb-0"
+          className="relative"
           style={{
-            perspective: '1400px',
-            perspectiveOrigin: '50% 85%',
+            width:     'min(92vw, 860px)',
+            height:    'min(62vh, 520px)',
+            overflow:  'hidden',
+            transform: 'translateZ(0)',
           }}
         >
-          <div
-            className="relative"
-            style={{
-              width: 'min(92vw, 860px)',
-              height: 'min(62vh, 520px)',
-            }}
-          >
-            {values.map((v, i) => (
-              <div
-                key={v.index}
-                ref={(el) => { cardRefs.current[i] = el; }}
-                className="absolute inset-0"
-                style={{
-                  willChange: 'transform, opacity',
-                  backfaceVisibility: 'hidden',
-                  zIndex: i + 1,
-                }}
-              >
-                {/* Card surface */}
+          {values.map((v, i) => (
+            <div
+              key={v.index}
+              ref={(el) => { cardRefs.current[i] = el; }}
+              className="absolute inset-0"
+              style={{
+                zIndex: i + 1,
+                // CSS sets initial state at render time — card 0 visible,
+                // cards 1-N hidden below container before GSAP runs.
+                transform: i === 0 ? 'none' : 'translateY(110%)',
+              }}
+            >
+              {DEBUG ? (
+                /* ── DEBUG VIEW — verify order 1→2→3→4→5→6 ────────────── */
+                <div
+                  className="w-full h-full flex items-center justify-center"
+                  style={{ background: DEBUG_BG[i] }}
+                >
+                  <span style={{ fontSize: 160, fontWeight: 900, color: 'white', lineHeight: 1 }}>
+                    {i + 1}
+                  </span>
+                </div>
+              ) : (
+                /* ── CINEMATIC CARD ──────────────────────────────────────── */
                 <div
                   className="relative w-full h-full overflow-hidden"
                   style={{
-                    background: `linear-gradient(158deg, #1c1e20 0%, #0e1012 55%, #161a1e 100%)`,
+                    background: 'linear-gradient(158deg, #1c1e20 0%, #0e1012 55%, #161a1e 100%)',
                     borderRadius: '2px',
-                    boxShadow: `
-                      0 -1px 0 0 rgba(255,255,255,0.07),
-                      0 2px 40px rgba(0,0,0,0.7),
-                      0 8px 80px rgba(0,0,0,0.5),
-                      inset 0 1px 0 rgba(255,255,255,0.06)
-                    `,
+                    boxShadow: '0 -1px 0 0 rgba(255,255,255,0.07), 0 2px 40px rgba(0,0,0,0.7), 0 8px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)',
                   }}
                 >
-                  {/* Top-edge specular highlight */}
+                  {/* Top specular edge */}
                   <div
                     className="absolute top-0 left-0 right-0 h-px"
-                    style={{ background: `linear-gradient(90deg, transparent 0%, ${v.accent}60 30%, ${v.accent}90 50%, ${v.accent}60 70%, transparent 100%)` }}
+                    style={{ background: `linear-gradient(90deg, transparent, ${v.accent}90 50%, transparent)` }}
                   />
 
-                  {/* Inner grid overlay */}
-                  <div className="absolute inset-0 opacity-[0.035] pointer-events-none">
+                  {/* Grid texture */}
+                  <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.035 }}>
                     <svg width="100%" height="100%">
                       <defs>
-                        <pattern id={`val-grid-${i}`} width="48" height="48" patternUnits="userSpaceOnUse">
+                        <pattern id={`vg-${i}`} width="48" height="48" patternUnits="userSpaceOnUse">
                           <path d="M 48 0 L 0 0 0 48" fill="none" stroke={v.accent} strokeWidth="0.5" />
                         </pattern>
                       </defs>
-                      <rect width="100%" height="100%" fill={`url(#val-grid-${i})`} />
+                      <rect width="100%" height="100%" fill={`url(#vg-${i})`} />
                     </svg>
                   </div>
 
-                  {/* Atmospheric corner glow — painted over the opaque card surface */}
-                  <div
-                    className="absolute top-0 right-0 w-80 h-80 pointer-events-none"
-                    style={{
-                      background: `radial-gradient(ellipse at top right, ${v.accent}18 0%, #0e101200 65%)`,
-                    }}
-                  />
-                  <div
-                    className="absolute bottom-0 left-0 w-64 h-64 pointer-events-none"
-                    style={{
-                      background: `radial-gradient(ellipse at bottom left, ${v.accent}0e 0%, #0e101200 65%)`,
-                    }}
-                  />
+                  {/* Corner glows */}
+                  <div className="absolute top-0 right-0 w-80 h-80 pointer-events-none"
+                    style={{ background: `radial-gradient(ellipse at top right, ${v.accent}18 0%, transparent 65%)` }} />
+                  <div className="absolute bottom-0 left-0 w-64 h-64 pointer-events-none"
+                    style={{ background: `radial-gradient(ellipse at bottom left, ${v.accent}0e 0%, transparent 65%)` }} />
 
-                  {/* Ghost index — oversized background numeral */}
+                  {/* Ghost index */}
                   <div
-                    className="absolute right-8 bottom-4 font-mono font-bold leading-none select-none pointer-events-none"
-                    style={{
-                      fontSize: 'clamp(8rem, 18vw, 14rem)',
-                      color: v.accent,
-                      opacity: 0.045,
-                      lineHeight: 1,
-                    }}
+                    className="absolute right-8 bottom-4 font-mono font-bold select-none pointer-events-none"
+                    style={{ fontSize: 'clamp(8rem, 18vw, 14rem)', color: v.accent, opacity: 0.045, lineHeight: 1 }}
                   >
                     {v.index}
                   </div>
@@ -339,77 +216,49 @@ export default function ValuesSection() {
                   <div className="absolute bottom-6 left-6 w-6 h-6 border-b border-l" style={{ borderColor: `${v.accent}25` }} />
                   <div className="absolute bottom-6 right-6 w-6 h-6 border-b border-r" style={{ borderColor: `${v.accent}25` }} />
 
-                  {/* Scan-line texture */}
-                  <div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px)',
-                    }}
-                  />
+                  {/* Scan lines */}
+                  <div className="absolute inset-0 pointer-events-none"
+                    style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px)' }} />
 
-                  {/* Card content */}
+                  {/* Content */}
                   <div className="absolute inset-0 flex flex-col justify-between p-10 md:p-14">
-                    {/* Top row */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: v.accent }} />
-                        <span
-                          className="font-mono text-[10px] tracking-ultra uppercase"
-                          style={{ color: `${v.accent}80` }}
-                        >
+                        <span className="font-mono text-[10px] tracking-[0.25em] uppercase" style={{ color: `${v.accent}80` }}>
                           {v.label}
                         </span>
                       </div>
-                      <span
-                        className="font-mono text-[10px] tracking-widest"
-                        style={{ color: 'rgba(255,255,255,0.2)' }}
-                      >
+                      <span className="font-mono text-[10px] tracking-widest" style={{ color: 'rgba(255,255,255,0.2)' }}>
                         {v.index} / 0{N}
                       </span>
                     </div>
 
-                    {/* Main content */}
                     <div>
-                      {/* Accent bar */}
-                      <div
-                        className="h-0.5 mb-7"
-                        style={{ width: '56px', backgroundColor: v.accent }}
-                      />
-
-                      {/* Title — large, multi-line */}
+                      <div className="h-0.5 mb-7" style={{ width: '56px', backgroundColor: v.accent }} />
                       <h3
                         className="font-mono uppercase leading-none mb-7"
-                        style={{
-                          fontSize: 'clamp(2.4rem, 5.5vw, 4.4rem)',
-                          letterSpacing: '-0.025em',
-                          color: v.accent,
-                          whiteSpace: 'pre-line',
-                        }}
+                        style={{ fontSize: 'clamp(2.4rem, 5.5vw, 4.4rem)', letterSpacing: '-0.025em', color: v.accent, whiteSpace: 'pre-line' }}
                       >
                         {v.title}
                       </h3>
-
-                      {/* Body copy */}
-                      <p
-                        className="font-mono text-[12px] leading-loose max-w-lg"
-                        style={{ color: 'rgba(255,255,255,0.38)' }}
-                      >
+                      <p className="font-mono text-[12px] leading-loose max-w-lg" style={{ color: 'rgba(255,255,255,0.38)' }}>
                         {v.body}
                       </p>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              )}
+            </div>
+          ))}
         </div>
-
-        {/* Bottom edge fade */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none z-40"
-          style={{ background: 'linear-gradient(to bottom, transparent, rgba(8,8,8,0.6))' }}
-        />
       </div>
+
+      {/* Bottom fade */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none z-[90]"
+        style={{ background: 'linear-gradient(to bottom, transparent, rgba(8,8,8,0.6))' }}
+      />
     </section>
   );
 }
